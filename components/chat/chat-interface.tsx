@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
-import { Send, Loader2, Edit2, Check, X } from "lucide-react";
+import { Send, Loader2, Edit2, Check, X, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,6 +19,7 @@ import { ChatMessage } from "./chat-message";
 import { UIMessage } from "ai";
 import { set } from "date-fns";
 import { Textarea } from "../ui/textarea";
+import { FaStopCircle } from "react-icons/fa";
 
 interface ChatInterfaceProps {
   chatId?: string;
@@ -172,23 +173,25 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 What are you working on?
               </h2>
             </div>
-          ) : 
+          ) : (
             messages.map((message) => (
               <ChatMessage
                 key={message.id}
                 message={message}
                 onEdit={(id, newContent) => {
                   const updatedMessages = messages.map((msg) =>
-                    msg.content == newContent ? { ...msg, content: newContent } : msg
+                    msg.content == newContent
+                      ? { ...msg, content: newContent }
+                      : msg
                   );
-                  console.log("messages",message);
-                  console.log("updatedmess",updatedMessages);
-                  
+                  console.log("messages", message);
+                  console.log("updatedmess", updatedMessages);
+
                   setMessages(updatedMessages);
                 }}
               />
             ))
-          }
+          )}
 
           {isLoading && (
             <div className="flex items-start gap-3">
@@ -232,17 +235,25 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 e.currentTarget.style.height = "auto";
                 e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault(); // prevent newline
+                  if (input.trim()) {
+                    handleSubmit(e); // trigger form submit
+                  }
+                }
+              }}
             />
             <Button
               type="submit"
               disabled={isLoading || !input.trim()}
-              size="icon"
+              // size="icon"
               className="shrink-0 bg-white text-black hover:bg-neutral-200 dark:bg-white dark:text-black dark:hover:bg-neutral-200 light:bg-black light:text-white light:hover:bg-neutral-800"
             >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+              {status==="ready" ? (
+                <ArrowUp className="bg-white font-extrabold w-8 h-8"/>
               ) : (
-                <Send className="w-4 h-4" />
+                <FaStopCircle className="bg-white font-extrabold w-8 h-8"/>
               )}
             </Button>
           </form>
