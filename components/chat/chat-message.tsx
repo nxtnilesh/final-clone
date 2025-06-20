@@ -14,11 +14,9 @@ import remarkGfm from "remark-gfm";
 import { UIMessage } from "ai";
 
 interface ChatMessageProps {
-  message: UIMessage
+  message: UIMessage;
   onEdit?: (id: string, content: string) => void;
 }
-
-
 
 export function ChatMessage({ message, onEdit }: ChatMessageProps) {
   const [copied, setCopied] = useState(false);
@@ -43,12 +41,10 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
     }
   };
 
-  console.log("before edit",message);
-  
+  console.log("before edit", message);
 
   const handleSaveEdit = () => {
     console.log("edit message", editContent);
-
 
     onEdit?.(message.id, editContent);
     setIsEditing(false);
@@ -66,12 +62,12 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
       }`}
     >
       <Card
-        className={`group relative transition-all overflow-x-auto w-full ${
+        className={`group relative transition-all bg-transparent overflow-x-auto w-full ${
           isUser
             ? `${
                 isEditing ? "w-full" : "w-auto"
               } bg-neutral-700 px-3 py-1 text-white dark:text-white`
-            : "bg-neutral-900 text-muted-foreground p-2 w-full md:max-w-3xl border-none"
+            : "p-2 w-full md:max-w-3xl border-none"
         }`}
       >
         <div className="flex flex-col gap-2 w-full">
@@ -104,6 +100,10 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
                         style={oneDark}
                         language={match[1]}
                         PreTag="div"
+                        // customStyle={{
+                        //   backgroundColor: "#000", // true black
+                        
+                        // }}
                         {...rest}
                       >
                         {String(children).replace(/\n$/, "")}

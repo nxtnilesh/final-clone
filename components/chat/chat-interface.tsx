@@ -20,6 +20,7 @@ import { UIMessage } from "ai";
 import { set } from "date-fns";
 import { Textarea } from "../ui/textarea";
 import { FaStopCircle } from "react-icons/fa";
+import { ChatFileUploader } from "./chat-file-upload";
 
 interface ChatInterfaceProps {
   chatId?: string;
@@ -120,14 +121,14 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   if (isLoadingCurrentChat) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full bg-neutral-600">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-neutral-900 text-white dark:bg-neutral-900 dark:text-white light:bg-white light:text-black">
+    <div className="flex flex-col h-screen bg-neutral-700 text-white dark:bg-neutral-900 dark:text-white light:bg-white light:text-black">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
@@ -172,7 +173,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-4 bg-neutral-800">
         <div className="max-w-4xl mx-auto ">
           {messages.length === 0 ? (
             <div className="text-center text-muted-foreground py-12">
@@ -250,6 +251,16 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                     handleSubmit(e); // trigger form submit
                   }
                 }
+              }}
+            />
+            <ChatFileUploader
+              onUploadComplete={(url) => {
+                console.log("uploaded file url", url);
+
+                // append({
+                //   role: "user",
+                //   content: `![Uploaded Image](${url})`,
+                // });
               }}
             />
             <Button
