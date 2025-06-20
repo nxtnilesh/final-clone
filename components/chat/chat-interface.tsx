@@ -119,7 +119,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen bg-neutral-900 text-white dark:bg-neutral-900 dark:text-white light:bg-white light:text-black">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
@@ -165,13 +165,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
       {/* Messages */}
       <ScrollArea className="flex-1 p-4">
-        <div className="max-w-4xl mx-auto space-y-4">
+        <div className="max-w-4xl mx-auto ">
           {messages.length === 0 ? (
             <div className="text-center text-muted-foreground py-12">
               <h2 className="text-2xl font-semibold mb-2">
-                How can I help you today?
+                What are you working on?
               </h2>
-              <p>Start a conversation by typing a message below.</p>
             </div>
           ) : (
             messages.map((message) => (
@@ -198,14 +197,14 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       </ScrollArea>
 
       {/* Input */}
-      {/* Input */}
       <div
         className={`w-full ${
           messages.length === 0
-            ? "flex-1 flex items-center justify-center p-4"
+            ? "flex-1 flex  justify-center p-4"
             : "p-4 border-t border-neutral-800 dark:border-neutral-800 light:border-neutral-200"
         }`}
       >
+        
         <div className="max-w-4xl w-full mx-auto">
           <form
             onSubmit={handleSubmit}
