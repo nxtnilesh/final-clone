@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const SpeechRecognition = (isActive: boolean) => {
+const useSpeechRecognition = (isActive: boolean) => {
   const [transcript, setTranscript] = useState<string>("");
   const [isListening, setIsListening] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -52,4 +52,4 @@ const SpeechRecognition = (isActive: boolean) => {
   return { transcript, isListening, error };
 };
 
-export default SpeechRecognition;
+export default useSpeechRecognition;

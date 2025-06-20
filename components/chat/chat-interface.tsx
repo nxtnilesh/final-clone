@@ -3,7 +3,16 @@
 import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
-import { Send, Loader2, Edit2, Check, X, ArrowUp } from "lucide-react";
+import {
+  Send,
+  Loader2,
+  Edit2,
+  Check,
+  X,
+  ArrowUp,
+  Pause,
+  Mic,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -21,6 +30,7 @@ import { set } from "date-fns";
 import { Textarea } from "../ui/textarea";
 import { FaStopCircle } from "react-icons/fa";
 import { ChatFileUploader } from "./chat-file-upload";
+import useSpeechRecognition from "@/hooks/use-speechRecogination";
 
 interface ChatInterfaceProps {
   chatId?: string;
@@ -36,6 +46,10 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const [editTitle, setEditTitle] = useState("");
   const [finish, setFinish] = useState<Boolean>(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [isSpeechActive, setIsSpeechActive] = useState(false);
+  const [speechInput, setSpeechInput] = useState("");
+  const { transcript, isListening, error } =
+    useSpeechRecognition(isSpeechActive);
 
   const {
     messages,
@@ -64,6 +78,13 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     },
   });
 
+  useEffect(() => {
+    
+    if (transcript) {
+      setSpeechInput((prevInput) => prevInput + " " + transcript);
+      console.log("speech data",speechInput);
+    }
+  }, [transcript]);
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
@@ -253,6 +274,20 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 }
               }}
             />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              disabled={isLoading}
+              onClick={() => setIsSpeechActive(!isSpeechActive)}
+              className="h-9 w-9 rounded-md border border-gray-300"
+            >
+              {isListening ? (
+                <Pause className="h-5 w-5 text-blue-600" />
+              ) : (
+                <Mic className="h-5 w-5 text-gray-600" />
+              )}
+            </Button>
             <ChatFileUploader
               onUploadComplete={(url) => {
                 console.log("uploaded file url", url);
