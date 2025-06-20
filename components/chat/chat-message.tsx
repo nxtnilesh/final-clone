@@ -11,15 +11,14 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
+import { UIMessage } from "ai";
 
 interface ChatMessageProps {
-  message: {
-    id: string;
-    role: "user" | "assistant";
-    content: string;
-  };
+  message: UIMessage
   onEdit?: (id: string, content: string) => void;
 }
+
+
 
 export function ChatMessage({ message, onEdit }: ChatMessageProps) {
   const [copied, setCopied] = useState(false);
@@ -44,7 +43,13 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
     }
   };
 
+  console.log("before edit",message);
+  
+
   const handleSaveEdit = () => {
+    console.log("edit message", editContent);
+
+
     onEdit?.(message.id, editContent);
     setIsEditing(false);
   };
@@ -71,24 +76,23 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
       >
         <div className="flex flex-col gap-2 w-full">
           {isEditing ? (
-            <div className="w-full flex flex-col items-end ">
+            <div className="w-full flex flex-col items-end">
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className=" w-full min-h-[100px] bg-transparent text-white placeholder:text-muted-foreground border-none outline-none focus:outline-none focus:ring-0 shadow-none resize-none"
+                className="w-full min-h-[100px] bg-transparent text-white placeholder:text-muted-foreground border-none outline-none focus:outline-none focus:ring-0 shadow-none resize-none"
               />
-
               <div className="flex gap-2 mt-2">
-                <Button size="sm" onClick={handleSaveEdit}>
-                  <Check className="w-4 h-4" />
-                </Button>
                 <Button size="sm" variant="outline" onClick={handleCancelEdit}>
-                  Cencel
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleSaveEdit}>
+                  Save
                 </Button>
               </div>
             </div>
           ) : (
-            <div className="">
+            <div>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -117,10 +121,11 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
             </div>
           )}
         </div>
+
         {!isEditing && (
           <div
-            className={` flex justify-end  gap-2 mt-2 transition-opacity ${
-              isUser ? " group-hover:opacity-100" : "opacity-100"
+            className={`flex justify-end gap-2 mt-2 transition-opacity ${
+              isUser ? "group-hover:opacity-100" : "opacity-100"
             }`}
           >
             <Button

@@ -172,11 +172,23 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 What are you working on?
               </h2>
             </div>
-          ) : (
+          ) : 
             messages.map((message) => (
-              <ChatMessage key={message.id} message={message} />
+              <ChatMessage
+                key={message.id}
+                message={message}
+                onEdit={(id, newContent) => {
+                  const updatedMessages = messages.map((msg) =>
+                    msg.content == newContent ? { ...msg, content: newContent } : msg
+                  );
+                  console.log("messages",message);
+                  console.log("updatedmess",updatedMessages);
+                  
+                  setMessages(updatedMessages);
+                }}
+              />
             ))
-          )}
+          }
 
           {isLoading && (
             <div className="flex items-start gap-3">
@@ -204,7 +216,6 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             : "p-4 border-t border-neutral-800 dark:border-neutral-800 light:border-neutral-200"
         }`}
       >
-        
         <div className="max-w-4xl w-full mx-auto">
           <form
             onSubmit={handleSubmit}
