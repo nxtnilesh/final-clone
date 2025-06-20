@@ -1,9 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { UserButton } from "@clerk/nextjs"
-import { Plus, MessageSquare, Trash2, Edit2, Check, X } from "lucide-react"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
+import {
+  Plus,
+  MessageSquare,
+  Trash2,
+  Edit2,
+  Check,
+  X,
+  SquarePen,
+  Search,
+  Sparkles,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,70 +26,82 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-} from "@/components/ui/sidebar"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useChats } from "@/hooks/use-chats"
-import { useChatStore } from "@/lib/store"
+} from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useChats } from "@/hooks/use-chats";
+import { useChatStore } from "@/lib/store";
+import { FaRobot } from "react-icons/fa";
 
 export function ChatSidebar() {
-  const router = useRouter()
-  const { chats, isLoadingChats, createChat, deleteChat, updateChatTitle } = useChats()
-  const { currentChat } = useChatStore()
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editTitle, setEditTitle] = useState("")
+  const router = useRouter();
+  const { chats, isLoadingChats, createChat, deleteChat, updateChatTitle } =
+    useChats();
+  const { currentChat } = useChatStore();
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
 
   const handleNewChat = async () => {
     try {
       // const newChat = await createChat()
       // router.push(`/chat/${newChat._id}`)
-      router.push(`/chat/`)
+      router.push(`/chat/`);
     } catch (error) {
-      console.error("Failed to create chat:", error)
+      console.error("Failed to create chat:", error);
     }
-  }
+  };
 
   const handleChatClick = (chatId: string) => {
-    router.push(`/chat/${chatId}`)
-  }
+    router.push(`/chat/${chatId}`);
+  };
 
   const handleEditStart = (chatId: string, currentTitle: string) => {
-    setEditingId(chatId)
-    setEditTitle(currentTitle)
-  }
+    setEditingId(chatId);
+    setEditTitle(currentTitle);
+  };
 
   const handleEditSave = async (chatId: string) => {
     if (editTitle.trim()) {
-      await updateChatTitle(chatId, editTitle.trim())
+      await updateChatTitle(chatId, editTitle.trim());
     }
-    setEditingId(null)
-    setEditTitle("")
-  }
+    setEditingId(null);
+    setEditTitle("");
+  };
 
   const handleEditCancel = () => {
-    setEditingId(null)
-    setEditTitle("")
-  }
+    setEditingId(null);
+    setEditTitle("");
+  };
 
   const handleDelete = async (chatId: string) => {
-    await deleteChat(chatId)
+    await deleteChat(chatId);
     if (currentChat?._id === chatId) {
-      router.push("/chat")
+      router.push("/chat");
     }
-  }
+  };
 
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="p-4">
-        <Button onClick={handleNewChat} className="w-full">
-          <Plus className="w-4 h-4 mr-2" />
-          New Chat
-        </Button>
+        <FaRobot size={25} onClick={handleNewChat} />
       </SidebarHeader>
 
       <SidebarContent>
+        <SidebarGroup>
+          <button
+            onClick={handleNewChat}
+            className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg"
+          >
+            <SquarePen size={20} />
+            New Chat
+          </button>
+          <button className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg">
+            <Search size={20} />
+            Search chats
+          </button>
+        </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Recent Chats</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -92,7 +114,9 @@ export function ChatSidebar() {
                     </SidebarMenuItem>
                   ))
                 ) : chats.length === 0 ? (
-                  <div className="p-4 text-center text-muted-foreground">No chats yet. Start a new conversation!</div>
+                  <div className="p-4 text-center text-muted-foreground">
+                    No chats yet. Start a new conversation!
+                  </div>
                 ) : (
                   chats.map((chat) => (
                     <SidebarMenuItem key={chat._id}>
@@ -105,9 +129,9 @@ export function ChatSidebar() {
                               className="h-8 text-sm"
                               onKeyDown={(e) => {
                                 if (e.key === "Enter") {
-                                  handleEditSave(chat._id)
+                                  handleEditSave(chat._id);
                                 } else if (e.key === "Escape") {
-                                  handleEditCancel()
+                                  handleEditCancel();
                                 }
                               }}
                               autoFocus
@@ -120,7 +144,12 @@ export function ChatSidebar() {
                             >
                               <Check className="w-3 h-3" />
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={handleEditCancel} className="h-8 w-8 p-0">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={handleEditCancel}
+                              className="h-8 w-8 p-0"
+                            >
                               <X className="w-3 h-3" />
                             </Button>
                           </div>
@@ -136,7 +165,9 @@ export function ChatSidebar() {
                             </SidebarMenuButton>
                             <div className="opacity-0 group-hover:opacity-100 flex">
                               <SidebarMenuAction
-                                onClick={() => handleEditStart(chat._id, chat.title)}
+                                onClick={() =>
+                                  handleEditStart(chat._id, chat.title)
+                                }
                                 className="w-6 h-6"
                               >
                                 <Edit2 className="w-3 h-3" />
@@ -161,11 +192,21 @@ export function ChatSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        <div className="flex items-center gap-2">
+        <button
+          onClick={handleNewChat}
+          className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg"
+        >
+          <Sparkles size={20} />
+          <div className="flex flex-col justify-start items-start gap-1">
+            <p className="text-sm">Upgrade plan</p>
+            <p className="text-[10px]">More access to the best models</p>
+          </div>
+        </button>
+        {/* <div className="flex items-center gap-2">
           <UserButton afterSignOutUrl="/sign-in" />
           <span className="text-sm text-muted-foreground">Account</span>
-        </div>
+        </div> */}
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
