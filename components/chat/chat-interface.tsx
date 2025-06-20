@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
 import { Send, Loader2, Edit2, Check, X, ArrowUp } from "lucide-react";
@@ -34,6 +34,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editTitle, setEditTitle] = useState("");
   const [finish, setFinish] = useState<Boolean>(false);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const {
     messages,
@@ -61,6 +62,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       });
     },
   });
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   async function submitChats() {
     if (!chatId) {
@@ -209,6 +216,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             </div>
           )}
         </div>
+        <div ref={bottomRef} />
       </ScrollArea>
 
       {/* Input */}
@@ -250,10 +258,10 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               // size="icon"
               className="shrink-0 bg-white text-black hover:bg-neutral-200 dark:bg-white dark:text-black dark:hover:bg-neutral-200 light:bg-black light:text-white light:hover:bg-neutral-800"
             >
-              {status==="ready" ? (
-                <ArrowUp className="bg-white font-extrabold w-8 h-8"/>
+              {status === "ready" ? (
+                <ArrowUp className="bg-white font-extrabold w-8 h-8" />
               ) : (
-                <FaStopCircle className="bg-white font-extrabold w-8 h-8"/>
+                <FaStopCircle className="bg-white font-extrabold w-8 h-8" />
               )}
             </Button>
           </form>
