@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 
 interface FileUploaderProps {
   onUploadComplete: (url: string) => void;
@@ -43,14 +43,13 @@ export const ChatFileUploader = ({ onUploadComplete }: FileUploaderProps) => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <Button
+        <button
           type="button"
-          variant="secondary"
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
         >
-          Upload File
-        </Button>
+         <Plus />
+        </button>
         <input
           type="file"
           ref={fileInputRef}

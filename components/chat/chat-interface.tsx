@@ -79,10 +79,9 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   });
 
   useEffect(() => {
-    
     if (transcript) {
       setSpeechInput((prevInput) => prevInput + " " + transcript);
-      console.log("speech data",speechInput);
+      console.log("speech data", speechInput);
     }
   }, [transcript]);
   useEffect(() => {
@@ -249,7 +248,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             : "p-4 border-t border-neutral-800 dark:border-neutral-800 light:border-neutral-200"
         }`}
       >
-        <div className="max-w-4xl w-full mx-auto">
+        <div className="max-w-4xl w-full mx-auto ">
           <form
             onSubmit={handleSubmit}
             className="flex gap-2 items-end rounded-xl bg-neutral-800 border border-neutral-700 shadow-lg p-2 dark:bg-neutral-800 dark:border-neutral-700 light:bg-neutral-100 light:border-neutral-200"
@@ -274,20 +273,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 }
               }}
             />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              disabled={isLoading}
-              onClick={() => setIsSpeechActive(!isSpeechActive)}
-              className="h-9 w-9 rounded-md border border-gray-300"
-            >
-              {isListening ? (
-                <Pause className="h-5 w-5 text-blue-600" />
-              ) : (
-                <Mic className="h-5 w-5 text-gray-600" />
-              )}
-            </Button>
+          </form>
+          <div className="flex w-full items-center">
             <ChatFileUploader
               onUploadComplete={(url) => {
                 console.log("uploaded file url", url);
@@ -298,6 +285,21 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 // });
               }}
             />
+            <div className="w-full"></div>
+            <Button
+              // type="button"
+              // variant="ghost"
+              // size="icon"
+              disabled={isLoading}
+              onClick={() => setIsSpeechActive(!isSpeechActive)}
+              // className="h-9 w-9 rounded-md border border-gray-300"
+            >
+              {isListening ? (
+                <Pause className="h-5 w-5 text-blue-600" />
+              ) : (
+                <Mic className="h-5 w-5 text-gray-600" />
+              )}
+            </Button>
             <Button
               type="submit"
               disabled={isLoading || !input.trim()}
@@ -310,7 +312,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 <FaStopCircle className="bg-white font-extrabold w-8 h-8" />
               )}
             </Button>
-          </form>
+          </div>
         </div>
       </div>
     </div>
