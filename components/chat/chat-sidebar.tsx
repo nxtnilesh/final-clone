@@ -34,6 +34,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useChats } from "@/hooks/use-chats";
 import { useChatStore } from "@/lib/store";
 import { FaRobot } from "react-icons/fa";
+import { ChatSearchDialog } from "./chat-search-dialog";
 
 export function ChatSidebar() {
   const router = useRouter();
@@ -47,6 +48,7 @@ export function ChatSidebar() {
     try {
       // const newChat = await createChat()
       // router.push(`/chat/${newChat._id}`)
+
       router.push(`/chat/`);
     } catch (error) {
       console.error("Failed to create chat:", error);
@@ -82,6 +84,8 @@ export function ChatSidebar() {
     }
   };
 
+  const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
+
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="p-4">
@@ -90,6 +94,10 @@ export function ChatSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
+          <ChatSearchDialog
+            open={isSearchDialogOpen}
+            onOpenChange={setIsSearchDialogOpen}
+          />
           <button
             onClick={handleNewChat}
             className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg"
@@ -97,7 +105,10 @@ export function ChatSidebar() {
             <SquarePen size={20} />
             New Chat
           </button>
-          <button className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg">
+          <button
+            onClick={() => setIsSearchDialogOpen(true)}
+            className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg"
+          >
             <Search size={20} />
             Search chats
           </button>
@@ -202,10 +213,6 @@ export function ChatSidebar() {
             <p className="text-[10px]">More access to the best models</p>
           </div>
         </button>
-        {/* <div className="flex items-center gap-2">
-          <UserButton afterSignOutUrl="/sign-in" />
-          <span className="text-sm text-muted-foreground">Account</span>
-        </div> */}
       </SidebarFooter>
     </Sidebar>
   );
