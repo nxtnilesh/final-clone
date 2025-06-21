@@ -13,7 +13,7 @@ import {
   SquarePen,
   Search,
   Sparkles,
-  MoreHorizontal,
+  Ellipsis,
 } from "lucide-react";
 import {
   Sidebar,
@@ -36,12 +36,6 @@ import { useChats } from "@/hooks/use-chats";
 import { useChatStore } from "@/lib/store";
 import { FaRobot } from "react-icons/fa";
 import { ChatSearchDialog } from "./chat-search-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 
 export function ChatSidebar() {
   const router = useRouter();
@@ -138,72 +132,73 @@ export function ChatSidebar() {
                 ) : (
                   chats.map((chat) => (
                     <SidebarMenuItem key={chat._id}>
-                      {editingId === chat._id ? (
-                        <div className="flex items-center w-full gap-1">
-                          <Input
-                            value={editTitle}
-                            onChange={(e) => setEditTitle(e.target.value)}
-                            className="h-8 text-sm"
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                handleEditSave(chat._id);
-                              } else if (e.key === "Escape") {
-                                handleEditCancel();
-                              }
-                            }}
-                            autoFocus
-                          />
-                          <Button
-                            variant="ghost"
-                            onClick={() => handleEditSave(chat._id)}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Check className="w-3 h-3" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            onClick={handleEditCancel}
-                            className="h-8 w-8 p-0"
-                          >
-                            <X className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <>
-                          <SidebarMenuButton
-                            onClick={() => handleChatClick(chat._id)}
-                            isActive={currentChat?._id === chat._id}
-                            className="flex-1 justify-start"
-                          >
-                            <span className="truncate">{chat.title}</span>
-                          </SidebarMenuButton>
+                      <div className="flex items-center w-full group">
+                        {editingId === chat._id ? (
+                          <div className="flex items-center w-full gap-1">
+                            <Input
+                              value={editTitle}
+                              onChange={(e) => setEditTitle(e.target.value)}
+                              className="h-8 text-sm"
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  handleEditSave(chat._id);
+                                } else if (e.key === "Escape") {
+                                  handleEditCancel();
+                                }
+                              }}
+                              autoFocus
+                            />
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleEditSave(chat._id)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Check className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={handleEditCancel}
+                              className="h-8 w-8 p-0"
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <>
+                            <SidebarMenuButton
+                              onClick={() => handleChatClick(chat._id)}
+                              isActive={currentChat?._id === chat._id}
+                              className="flex-1 justify-start group" // 👈 group goes here
+                            >
+                              <MessageSquare className="w-4 h-4" />
+                              <span className="truncate flex-1">
+                                {chat.title}
+                              </span>
+                              <Ellipsis className="opacity-0 group-hover:opacity-100" />{" "}
+                              {/* 👈 works on hover of group */}
+                            </SidebarMenuButton>
 
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <SidebarMenuAction className="w-6 h-6">
-                                <MoreHorizontal className="w-4 h-4" />
-                              </SidebarMenuAction>
-                            </DropdownMenuTrigger>
-
-                            <DropdownMenuContent side="right" align="start">
-                              <DropdownMenuItem
+                            <div className="opacity-0 group-hover:opacity-100 flex">
+                              <SidebarMenuAction
                                 onClick={() =>
                                   handleEditStart(chat._id, chat.title)
                                 }
+                                className="w-6 h-6"
                               >
-                                <Edit2 className="w-3 h-3 mr-2" />
-                                <span>Edit</span>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
+                                <Edit2 className="w-3 h-3" />
+                              </SidebarMenuAction>
+                              <SidebarMenuAction
                                 onClick={() => handleDelete(chat._id)}
+                                className="w-6 h-6 text-destructive hover:text-destructive"
                               >
-                                <Trash2 className="w-3 h-3 mr-2 text-destructive" />
-                                <span className="text-destructive">Delete</span>
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </>
-                      )}
+                                <Trash2 className="w-3 h-3" />
+                              </SidebarMenuAction>
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </SidebarMenuItem>
                   ))
                 )}

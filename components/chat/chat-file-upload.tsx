@@ -48,7 +48,7 @@ export const ChatFileUploader = ({ onUploadComplete }: FileUploaderProps) => {
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
         >
-         <Plus />
+         <Plus className="h-9 w-9 hover:bg-gray-500 p-2 rounded-full font-extrabold   text-white"/>
         </button>
         <input
           type="file"

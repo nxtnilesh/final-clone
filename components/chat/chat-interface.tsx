@@ -250,41 +250,51 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         <div className="max-w-4xl w-full mx-auto ">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col rounded-xl bg-neutral-900 border border-neutral-700 shadow-lg p-2 dark:bg-neutral-700 dark:border-neutral-700 light:bg-neutral-100 light:border-neutral-200"
+            className="flex flex-col rounded-3xl bg-neutral-900 border border-neutral-700 shadow-lg p-1 dark:bg-neutral-700 dark:border-neutral-700 light:bg-neutral-100 light:border-neutral-200"
           >
-            <Textarea
+            <textarea
               value={input}
               onChange={handleInputChange}
               placeholder="Type your message..."
               disabled={isLoading}
-              className="flex-1 resize-none max-h-48 overflow-auto bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-neutral-500 dark:text-white dark:placeholder:text-neutral-500 light:text-black light:placeholder:text-neutral-500"
-              rows={1}
+              className=" px-3 pt-3  focus:border-none focus:outline-none w-full resize-none overflow-y-auto bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-neutral-500 dark:text-white dark:placeholder:text-neutral-500 light:text-black light:placeholder:text-neutral-500 min-h-[40px] max-h-[420px]"
               onInput={(e) => {
-                e.currentTarget.style.height = "auto";
-                e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+                const textarea = e.currentTarget;
+                textarea.style.height = "auto"; // Reset first
+                const scrollHeight = textarea.scrollHeight;
+
+                // Cap height at 420px
+                if (scrollHeight > 420) {
+                  textarea.style.height = "420px"; // Lock height
+                  textarea.style.overflowY = "auto"; // Enable scroll
+                } else {
+                  textarea.style.height = `${scrollHeight}px`; // Grow normally
+                  textarea.style.overflowY = "hidden"; // Hide scrollbar
+                }
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault(); 
+                  e.preventDefault();
                   if (input.trim()) {
-                    handleSubmit(e); 
+                    handleSubmit(e);
                   }
                 }
               }}
             />
-            <div className="flex w-full items-center">
+
+            <div className="flex w-full items-center px-3 pb-2">
               <ChatFileUploader
                 onUploadComplete={(url) => {
                   setFileUrl(url);
                   console.log("uploaded file url", url);
-                  append({
-                    role: "user",
-                    content: `![Uploaded Image](${url})`,
-                  });
+                  // append({
+                  //   role: "user",
+                  //   content: `![Uploaded Image](${url})`,parts:[]
+                  // });
                 }}
               />
               <div className="w-full"></div>
-              <Button
+              <button
                 // type="button"
                 // variant="ghost"
                 // size="icon"
@@ -295,21 +305,20 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 {isListening ? (
                   <Pause className="h-5 w-5 text-blue-600" />
                 ) : (
-                  <Mic className="h-5 w-5 text-gray-600" />
+                  <Mic className="h-9 w-9 hover:bg-gray-500 p-2 rounded-full font-extrabold mx-2  text-white" />
                 )}
-              </Button>
-              <Button
+              </button>
+              <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
                 // size="icon"
-                className="shrink-0 bg-white text-black hover:bg-neutral-200 dark:bg-white dark:text-black dark:hover:bg-neutral-200 light:bg-black light:text-white light:hover:bg-neutral-800"
               >
                 {status === "ready" ? (
-                  <ArrowUp className="bg-white font-extrabold w-8 h-8" />
+                  <ArrowUp className="h-9 w-9 hover:bg-gray-500 p-1 rounded-full font-extrabold mx-2  text-white" />
                 ) : (
-                  <FaStopCircle className="bg-white font-extrabold w-8 h-8" />
+                  <FaStopCircle className="bg-white font-extrabold w-6 h-6" />
                 )}
-              </Button>
+              </button>
             </div>
           </form>
         </div>
