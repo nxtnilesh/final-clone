@@ -26,7 +26,15 @@ export async function POST(req: NextRequest) {
       model: openrouter.chat("mistralai/devstral-small:free"),
       messages,
       system:
-        "You are a helpful AI assistant. Provide clear, concise, and accurate responses in one line only",
+        `You are an expert assistant. Format your response like ChatGPT with:
+- Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
+- Bullet points for lists
+- Code blocks for any code
+- Bold or italicized keywords
+- Clear and concise explanations
+- Highlight results or final answers at the end
+Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity and readability.
+`,
       async onFinish({ response }) {
         let data = appendResponseMessages({
           messages,

@@ -142,16 +142,20 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   if (isLoadingCurrentChat) {
     return (
-      <div className="flex items-center justify-center h-full bg-neutral-600">
+      <div className="flex items-center justify-center h-full bg-neutral-800">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-neutral-800 text-white dark:bg-neutral-800 dark:text-white light:bg-white light:text-black">
+    <div
+      className={` h-screen  text-white dark:bg-neutral-800 dark:text-white light:bg-white light:text-black ${
+        messages.length > 0 ? null : "flex items-center justify-center"
+      }`}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
+      {/* <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
           <SidebarTrigger />
           {chatId && currentChat ? (
@@ -191,19 +195,13 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             <h1 className="text-lg font-semibold">New Chat</h1>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4 ">
-        <div className="max-w-4xl mx-auto ">
-          {messages.length === 0 ? (
-            <div className="text-center text-muted-foreground py-12">
-              <h2 className="text-2xl font-semibold mb-2">
-                What are you working on?
-              </h2>
-            </div>
-          ) : (
-            messages.map((message) => (
+      {messages.length < 0 ? null : (
+        <ScrollArea className=" p-4  bg-neutral-800">
+          <div className="max-w-4xl mx-auto bg-re">
+            {messages.map((message) => (
               <ChatMessage
                 key={message.id}
                 message={message}
@@ -219,45 +217,52 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                   setMessages(updatedMessages);
                 }}
               />
-            ))
-          )}
+            ))}
 
-          {isLoading && (
-            <div className="flex items-start gap-3">
-              <Avatar className="w-8 h-8">
-                <AvatarFallback>AI</AvatarFallback>
-              </Avatar>
-              <Card className="flex-1 p-4">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm text-muted-foreground">
-                    Thinking...
-                  </span>
-                </div>
-              </Card>
-            </div>
-          )}
-        </div>
-        <div ref={bottomRef} />
-      </ScrollArea>
+            {isLoading && (
+              <div className="flex items-start gap-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarFallback>AI</AvatarFallback>
+                </Avatar>
+                <Card className="flex-1 p-4">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm text-muted-foreground">
+                      Thinking...
+                    </span>
+                  </div>
+                </Card>
+              </div>
+            )}
+          </div>
+          <div ref={bottomRef} />
+        </ScrollArea>
+      )}
 
       {/* Input */}
       <div
-        className={`w-full ${
+        className={`w-full bg-neutral-800 ${
           messages.length === 0 ? "flex-1 flex  justify-center p-4" : "p-4 "
         }`}
       >
         <div className="max-w-4xl w-full mx-auto ">
+          {messages.length === 0 ? (
+            <div className="text-center  py-6">
+              <h2 className="text-2xl font-semibold mb-2">
+                What are you working on?
+              </h2>
+            </div>
+          ) : null}
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col rounded-3xl bg-neutral-900 border border-neutral-700 shadow-lg p-1 dark:bg-neutral-700 dark:border-neutral-700 light:bg-neutral-100 light:border-neutral-200"
+            className="flex flex-col rounded-3xl bg-neutral-900  shadow-lg p-1 dark:bg-neutral-700  light:bg-neutral-100 light:border-neutral-200"
           >
             <textarea
               value={input}
               onChange={handleInputChange}
-              placeholder="Type your message..."
+              placeholder="Ask anything..."
               disabled={isLoading}
-              className=" px-3 pt-3  focus:border-none focus:outline-none w-full resize-none overflow-y-auto bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-neutral-500 dark:text-white dark:placeholder:text-neutral-500 light:text-black light:placeholder:text-neutral-500 min-h-[40px] max-h-[420px]"
+              className=" px-3 pt-3 focus:border-none focus:outline-none w-full resize-none overflow-y-auto bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-neutral-200 dark:text-white dark:placeholder:text-neutral-500 light:text-black light:placeholder:text-neutral-500 min-h-[40px] max-h-[420px]"
               onInput={(e) => {
                 const textarea = e.currentTarget;
                 textarea.style.height = "auto"; // Reset first
@@ -295,12 +300,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               />
               <div className="w-full"></div>
               <button
-                // type="button"
-                // variant="ghost"
-                // size="icon"
                 disabled={isLoading}
                 onClick={() => setIsSpeechActive(!isSpeechActive)}
-                // className="h-9 w-9 rounded-md border border-gray-300"
               >
                 {isListening ? (
                   <Pause className="h-5 w-5 text-blue-600" />

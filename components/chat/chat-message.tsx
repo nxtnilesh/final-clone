@@ -57,12 +57,12 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
 
   return (
     <div
-      className={`flex items-start gap-3 mb-6 px-4 w-full ${
+      className={`flex items-start gap-3 mb-6 px-4 w-full  ${
         isUser ? "flex-row-reverse" : ""
       }`}
     >
       <Card
-        className={`group relative transition-all bg-transparent overflow-x-auto w-full ${
+        className={`group  relative transition-all bg-transparent overflow-x-auto w-full ${
           isUser
             ? `${
                 isEditing ? "w-full" : "w-auto"
