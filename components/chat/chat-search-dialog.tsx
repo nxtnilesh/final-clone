@@ -173,7 +173,7 @@ export function ChatSearchDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 border-none rounded-xl shadow-lg max-w-md w-full bg-neutral-800 text-white">
+      <DialogContent className="p-0 border-none rounded-3xl shadow-lg max-w-2xl w-full bg-neutral-800 text-white">
         <DialogHeader className="p-4 border-b border-neutral-700">
           <div className="relative flex items-center">
             <Search className="absolute left-3 w-4 h-4 text-neutral-400" />

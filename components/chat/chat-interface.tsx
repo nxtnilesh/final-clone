@@ -31,6 +31,7 @@ import { Textarea } from "../ui/textarea";
 import { FaStopCircle } from "react-icons/fa";
 import { ChatFileUploader } from "./chat-file-upload";
 import useSpeechRecognition from "@/hooks/use-speechRecogination";
+import Header from "../header";
 
 interface ChatInterfaceProps {
   chatId?: string;
@@ -155,6 +156,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       }`}
     >
       {/* Header */}
+        {messages.length > 0 && <Header/>}
+    
       {/* <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
           <SidebarTrigger />
@@ -199,6 +202,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
       {/* Messages */}
       {messages.length < 0 ? null : (
+        
         <ScrollArea className=" p-4  bg-neutral-800">
           <div className="max-w-4xl mx-auto bg-re">
             {messages.map((message) => (
