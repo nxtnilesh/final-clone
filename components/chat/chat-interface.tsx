@@ -48,6 +48,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [isSpeechActive, setIsSpeechActive] = useState(false);
   const [speechInput, setSpeechInput] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
   const { transcript, isListening, error } =
     useSpeechRecognition(isSpeechActive);
 
@@ -62,7 +63,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     append,
   } = useChat({
     api: "/api/chat",
-    body: { chatId },
+    body: { chatId, fileUrl },
 
     onFinish: async (message) => {
       if (message) {
@@ -148,7 +149,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-neutral-700 text-white dark:bg-neutral-900 dark:text-white light:bg-white light:text-black">
+    <div className="flex flex-col h-screen bg-neutral-800 text-white dark:bg-neutral-800 dark:text-white light:bg-white light:text-black">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
@@ -193,7 +194,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4 bg-neutral-800">
+      <ScrollArea className="flex-1 p-4 ">
         <div className="max-w-4xl mx-auto ">
           {messages.length === 0 ? (
             <div className="text-center text-muted-foreground py-12">
@@ -243,15 +244,13 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       {/* Input */}
       <div
         className={`w-full ${
-          messages.length === 0
-            ? "flex-1 flex  justify-center p-4"
-            : "p-4 border-t border-neutral-800 dark:border-neutral-800 light:border-neutral-200"
+          messages.length === 0 ? "flex-1 flex  justify-center p-4" : "p-4 "
         }`}
       >
         <div className="max-w-4xl w-full mx-auto ">
           <form
             onSubmit={handleSubmit}
-            className="flex gap-2 items-end rounded-xl bg-neutral-800 border border-neutral-700 shadow-lg p-2 dark:bg-neutral-800 dark:border-neutral-700 light:bg-neutral-100 light:border-neutral-200"
+            className="flex flex-col rounded-xl bg-neutral-900 border border-neutral-700 shadow-lg p-2 dark:bg-neutral-700 dark:border-neutral-700 light:bg-neutral-100 light:border-neutral-200"
           >
             <Textarea
               value={input}
@@ -266,53 +265,53 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault(); // prevent newline
+                  e.preventDefault(); 
                   if (input.trim()) {
-                    handleSubmit(e); // trigger form submit
+                    handleSubmit(e); 
                   }
                 }
               }}
             />
+            <div className="flex w-full items-center">
+              <ChatFileUploader
+                onUploadComplete={(url) => {
+                  setFileUrl(url);
+                  console.log("uploaded file url", url);
+                  append({
+                    role: "user",
+                    content: `![Uploaded Image](${url})`,
+                  });
+                }}
+              />
+              <div className="w-full"></div>
+              <Button
+                // type="button"
+                // variant="ghost"
+                // size="icon"
+                disabled={isLoading}
+                onClick={() => setIsSpeechActive(!isSpeechActive)}
+                // className="h-9 w-9 rounded-md border border-gray-300"
+              >
+                {isListening ? (
+                  <Pause className="h-5 w-5 text-blue-600" />
+                ) : (
+                  <Mic className="h-5 w-5 text-gray-600" />
+                )}
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading || !input.trim()}
+                // size="icon"
+                className="shrink-0 bg-white text-black hover:bg-neutral-200 dark:bg-white dark:text-black dark:hover:bg-neutral-200 light:bg-black light:text-white light:hover:bg-neutral-800"
+              >
+                {status === "ready" ? (
+                  <ArrowUp className="bg-white font-extrabold w-8 h-8" />
+                ) : (
+                  <FaStopCircle className="bg-white font-extrabold w-8 h-8" />
+                )}
+              </Button>
+            </div>
           </form>
-          <div className="flex w-full items-center">
-            <ChatFileUploader
-              onUploadComplete={(url) => {
-                console.log("uploaded file url", url);
-
-                // append({
-                //   role: "user",
-                //   content: `![Uploaded Image](${url})`,
-                // });
-              }}
-            />
-            <div className="w-full"></div>
-            <Button
-              // type="button"
-              // variant="ghost"
-              // size="icon"
-              disabled={isLoading}
-              onClick={() => setIsSpeechActive(!isSpeechActive)}
-              // className="h-9 w-9 rounded-md border border-gray-300"
-            >
-              {isListening ? (
-                <Pause className="h-5 w-5 text-blue-600" />
-              ) : (
-                <Mic className="h-5 w-5 text-gray-600" />
-              )}
-            </Button>
-            <Button
-              type="submit"
-              disabled={isLoading || !input.trim()}
-              // size="icon"
-              className="shrink-0 bg-white text-black hover:bg-neutral-200 dark:bg-white dark:text-black dark:hover:bg-neutral-200 light:bg-black light:text-white light:hover:bg-neutral-800"
-            >
-              {status === "ready" ? (
-                <ArrowUp className="bg-white font-extrabold w-8 h-8" />
-              ) : (
-                <FaStopCircle className="bg-white font-extrabold w-8 h-8" />
-              )}
-            </Button>
-          </div>
         </div>
       </div>
     </div>

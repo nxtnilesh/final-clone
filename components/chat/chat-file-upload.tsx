@@ -54,7 +54,7 @@ export const ChatFileUploader = ({ onUploadComplete }: FileUploaderProps) => {
           type="file"
           ref={fileInputRef}
           onChange={handleFileChange}
-          accept="image/*"
+          // accept="image/*"
           className="hidden"
         />
         {isUploading && <Loader2 className="animate-spin w-5 h-5 text-muted" />}

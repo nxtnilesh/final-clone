@@ -5,17 +5,12 @@ import { connectToDatabase } from "@/lib/mongodb";
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
-
     if (!userId) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-
     const { title, messages } = await req.json();
-
     const { db } = await connectToDatabase();
-
     const checkChat = await db.collection("chats").findOne({ userId, title });
-    
     if (!checkChat) {
       const chat = {
         userId,
@@ -30,7 +25,6 @@ export async function POST(req: NextRequest) {
     }
     checkChat.messages = messages;
     await db.collection("chats").insertOne(checkChat);
-
     return Response.json(checkChat._id);
   } catch (error) {
     console.error("Create chat error:", error);
@@ -41,18 +35,20 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   try {
     const { userId } = await auth();
-
     if (!userId) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-
     const { db } = await connectToDatabase();
-
     const chats = await db
       .collection("chats")
       .find({ userId })
       .sort({ updatedAt: -1 })
       .toArray();
+
+      console.log("without id",chats);
+      
+    // return Response.json({chats,"fileUrl":chats.fileUrl});
+
 
     return Response.json(chats);
   } catch (error) {

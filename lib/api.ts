@@ -27,6 +27,8 @@ export const chatApi = {
   // Get all chats
   getChats: async (): Promise<Chat[]> => {
     const response = await api.get("/chats")
+    console.log("res",response);
+    
     return response.data
   },
 

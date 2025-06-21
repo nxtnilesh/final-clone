@@ -10,7 +10,7 @@ export async function GET(
   try {
     const { userId } = await auth();
     const { chatId } = await params;
-    // const {chatId} = await req.json();
+    
     if (!userId) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -26,6 +26,7 @@ export async function GET(
     }
     console.log("chats", chat);
     
+    // return Response.json({chat,"fileUrl":chat.fileUrl});
     return Response.json(chat);
   } catch (error) {
     console.error("Get chat error:", error);

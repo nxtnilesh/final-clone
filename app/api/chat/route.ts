@@ -17,8 +17,8 @@ export async function POST(req: NextRequest) {
       return new Response("Unauthorized", { status: 401 });
     }
     const { db } = await connectToDatabase();
-    const { messages, chatId } = await req.json();
-    console.log("chatid", chatId, userId);
+    const { messages, chatId, fileUrl } = await req.json();
+    console.log("chatid", chatId, userId, fileUrl);
 
     const result = streamText({
       // model: openai("gpt-4o-mini"),
@@ -40,10 +40,10 @@ export async function POST(req: NextRequest) {
               $set: {
                 messages: data,
                 updatedAt: new Date(),
+                fileUrl
               },
             }
           );
-          console.log("mongodb", JSON.stringify(message));
         }
       },
     });
