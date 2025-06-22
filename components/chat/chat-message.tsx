@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check, Edit, X, User, Bot, ThumbsUp, ThumbsDown } from "lucide-react";
+import {
+  Copy,
+  Check,
+  Edit,
+  X,
+  User,
+  Bot,
+  ThumbsUp,
+  ThumbsDown,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -41,11 +48,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
     }
   };
 
-  console.log("message", message);
-
   const handleSaveEdit = () => {
-    console.log("edit message", editContent);
-
     onEdit?.(message.id, editContent);
     setIsEditing(false);
   };
@@ -57,17 +60,17 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
 
   return (
     <div
-      className={`flex items-start gap-3 mb-6 px-4 w-full  ${
+      className={`flex  items-start gap-3 mb-6 px-4 w-full ${
         isUser ? "flex-row-reverse" : ""
       }`}
     >
       <div
-        className={`group text-black relative transition-all bg-transparent overflow-x-auto w-full ${
+        className={`group text-black dark:text-white relative transition-all bg-transparent overflow-x-auto w-full ${
           isUser
             ? `${
                 isEditing ? "w-full" : "w-auto"
-              }  px-3 py-1 text-black bg-gray-50 dark:text-white`
-            : "p-2 w-full md:max-w-3xl border-none"
+              } px-3 py-1 bg-gray-50 dark:bg-neutral-800`
+            : "p-2 w-full md:max-w-3xl"
         }`}
       >
         <div className="flex flex-col gap-2 max-w-3xl">
@@ -76,10 +79,10 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full min-h-[100px] bg-transparent text-black placeholder:text-muted-foreground border-none outline-none focus:outline-none focus:ring-0 shadow-sm resize-none border"
-                autoFocus={true}
+                className="w-full min-h-[100px] bg-white dark:bg-neutral-800 text-black dark:text-white placeholder:text-muted-foreground dark:placeholder:text-neutral-400 border border-gray-300 dark:border-neutral-600 outline-none focus:ring-0 shadow-sm resize-none"
+                autoFocus
               />
-              <div className="flex gap-2 mt-2 ">
+              <div className="flex gap-2 mt-2">
                 <Button size="sm" variant="outline" onClick={handleCancelEdit}>
                   Cancel
                 </Button>
@@ -89,14 +92,14 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
               </div>
             </div>
           ) : (
-            <div
-              className={`flex ${
-                isUser ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div className={` ${
-                isUser ? "justify-end bg-gray-200 px-3 pt-2 rounded-2xl" : "justify-start"
-              }`}>
+            <div className={`max-w-3xl flex ${isUser ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`${
+                  isUser
+                    ? "justify-end bg-gray-200 dark:bg-neutral-600 px-3 pt-2 rounded-2xl"
+                    : "justify-start"
+                }`}
+              >
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
@@ -107,122 +110,122 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
                           style={oneDark}
                           language={match[1]}
                           PreTag="div"
-                          customStyle={
-                            {
-                              padding: "1rem",
-                              borderRadius: "0.5rem",
-                              fontSize: "0.875rem",
-                              overflowX: "auto",
-                            } as React.CSSProperties
-                          }
+                          customStyle={{
+                            padding: "1rem",
+                            borderRadius: "0.5rem",
+                            fontSize: "0.875rem",
+                          }}
                           {...rest}
                         >
                           {String(children).replace(/\n$/, "")}
                         </SyntaxHighlighter>
                       ) : (
                         <code
-                          className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono break-words"
+                          className="bg-muted dark:bg-neutral-700 px-1.5 py-0.5 rounded text-sm font-mono break-words"
                           {...rest}
                         >
                           {children}
                         </code>
                       );
                     },
-                    h1: ({ node, ...props }) => (
-                      <h1 className="text-2xl font-bold mt-6 mb-2" {...props} />
+                    h1: (props) => (
+                      <h1
+                        className="text-2xl font-bold mt-6 mb-2 text-black dark:text-white"
+                        {...props}
+                      />
                     ),
-                    h2: ({ node, ...props }) => (
+                    h2: (props) => (
                       <h2
-                        className="text-xl font-semibold mt-5 mb-2"
+                        className="text-xl font-semibold mt-5 mb-2 text-black dark:text-white"
                         {...props}
                       />
                     ),
-                    h3: ({ node, ...props }) => (
+                    h3: (props) => (
                       <h3
-                        className="text-lg font-semibold mt-4 mb-1"
+                        className="text-lg font-semibold mt-4 mb-1 text-black dark:text-white"
                         {...props}
                       />
                     ),
-                    hr: () => <hr className="my-6 border-t border-muted" />,
-                    p: ({ node, ...props }) => (
+                    hr: () => (
+                      <hr className="my-6 border-t border-muted dark:border-neutral-600" />
+                    ),
+                    p: (props) => (
                       <p
-                        className="mb-4 leading-relaxed text-base"
+                        className="mb-4 leading-relaxed text-base text-black dark:text-white"
                         {...props}
                       />
                     ),
-                    li: ({ node, ...props }) => (
+                    li: (props) => (
                       <li
-                        className="ml-6 list-disc leading-relaxed"
+                        className="ml-6 list-disc leading-relaxed text-black dark:text-white"
                         {...props}
                       />
                     ),
-                    ul: ({ node, ...props }) => (
+                    ul: (props) => (
                       <ul
-                        className="mb-4 list-disc list-outside pl-4"
+                        className="mb-4 list-disc list-outside pl-4 text-black dark:text-white"
                         {...props}
                       />
                     ),
-                    ol: ({ node, ...props }) => (
+                    ol: (props) => (
                       <ol
-                        className="mb-4 list-decimal list-outside pl-4"
+                        className="mb-4 list-decimal list-outside pl-4 text-black dark:text-white"
                         {...props}
                       />
                     ),
-                    blockquote: ({ node, ...props }) => (
+                    blockquote: (props) => (
                       <blockquote
-                        className="border-l-4 pl-4 italic text-muted-foreground my-4"
+                        className="border-l-4 pl-4 italic text-muted-foreground dark:text-neutral-400 my-4"
                         {...props}
                       />
                     ),
-                    a: ({ node, ...props }) => (
+                    a: (props) => (
                       <a
-                        className="text-blue-600 underline hover:text-blue-800 transition-colors"
+                        className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                         {...props}
                       />
                     ),
-                    img: ({ node, ...props }) => (
+                    img: (props) => (
                       <img
                         className="rounded-md shadow-md my-4 max-w-full h-auto"
                         alt={props.alt || ""}
                         {...props}
                       />
                     ),
-                    strong: ({ node, ...props }) => (
+                    strong: (props) => (
                       <strong className="font-semibold" {...props} />
                     ),
-                    em: ({ node, ...props }) => (
-                      <em className="italic" {...props} />
-                    ),
-                    table: ({ node, ...props }) => (
+                    em: (props) => <em className="italic" {...props} />,
+                    table: (props) => (
                       <div className="overflow-x-auto my-4">
                         <table
-                          className="w-full border-collapse border border-muted"
+                          className="w-full border-collapse border border-muted dark:border-neutral-600"
                           {...props}
                         />
                       </div>
                     ),
-                    th: ({ node, ...props }) => (
+                    th: (props) => (
                       <th
-                        className="border border-muted px-3 py-2 bg-muted text-left text-sm font-semibold"
+                        className="border border-muted dark:border-neutral-600 px-3 py-2 bg-muted dark:bg-neutral-800 text-left text-sm font-semibold"
                         {...props}
                       />
                     ),
-                    td: ({ node, ...props }) => (
+                    td: (props) => (
                       <td
-                        className="border border-muted px-3 py-2 text-sm"
+                        className="border border-muted dark:border-neutral-600 px-3 py-2 text-sm"
                         {...props}
                       />
                     ),
-                    input: ({ node, ...props }) => {
-                      if (props.type === "checkbox") {
+                    input: ({ type, checked, ...props }) => {
+                      if (type === "checkbox") {
                         return (
                           <input
                             type="checkbox"
                             className="mr-2 accent-blue-500"
                             disabled
-                            checked={props.checked}
+                            checked={checked}
                           />
                         );
                       }
@@ -237,48 +240,29 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
           )}
           {!isEditing && (
             <div
-              className={`flex opacity-0  group-hover/button:opacity-100  gap-2 mt-1 transition-opacity ${
+              className={`flex opacity-0 group-hover/button:opacity-100 gap-2 mt-1 transition-opacity ${
                 isUser
-                  ? "group-hover:opacity-100 justify-end "
+                  ? "group-hover:opacity-100 justify-end"
                   : "opacity-100 justify-start"
               }`}
             >
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => handleCopy(message.content)}
-              >
-                {copied ? (
-                  <Check className="w-4 h-4" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
+              <Button size="sm" variant="ghost" onClick={() => handleCopy(message.content)}>
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               </Button>
               {isUser && (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setIsEditing(true)}
-                >
+                <Button size="sm" variant="ghost" onClick={() => setIsEditing(true)}>
                   <Edit className="w-4 h-4" />
                 </Button>
               )}
-               {!isUser && (
-               <div>
-                 <Button
-                  size="sm"
-                  variant="ghost"
-                >
-                  <ThumbsUp className="w-4 h-4" />
-                </Button>
-                 <Button
-                  size="sm"
-                  variant="ghost"
-                >
-                  <ThumbsDown className="w-4 h-4" />
-                </Button>
-                 
-               </div>
+              {!isUser && (
+                <div className="flex gap-1">
+                  <Button size="sm" variant="ghost">
+                    <ThumbsUp className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost">
+                    <ThumbsDown className="w-4 h-4" />
+                  </Button>
+                </div>
               )}
             </div>
           )}

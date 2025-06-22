@@ -26,6 +26,7 @@ import { FaRobot } from "react-icons/fa";
 import { ChatActionsDropdown } from "./chat-dropdown";
 import { ChatSearchDialog } from "./chat-search-dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { set } from "zod";
 
 export function ChatSidebar() {
   const isMobile = useIsMobile();
@@ -38,7 +39,7 @@ export function ChatSidebar() {
 
   const closeSidebarOnMobile = () => {
     if (isMobile) {
-      setSidebarOpen(false);
+      setSidebarOpen(!setSidebarOpen);
     }
   };
   const handleNewChat = async () => {
@@ -84,13 +85,14 @@ export function ChatSidebar() {
   const { sidebarOpen, setSidebarOpen } = useChatStore();
   return (
     <Sidebar>
-      <SidebarHeader className="p-4 ">
+      <SidebarHeader className="p-4">
         <div className="flex justify-between">
-          <FaRobot size={25} onClick={handleNewChat} />
-          <SidebarTrigger
-            size="icon"
-            
+          <FaRobot
+            size={25}
+            onClick={handleNewChat}
+            className="text-black dark:text-white"
           />
+          <SidebarTrigger size="icon" />
         </div>
       </SidebarHeader>
 
@@ -102,21 +104,24 @@ export function ChatSidebar() {
           />
           <button
             onClick={handleNewChat}
-            className="w-full flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg"
+            className="w-full flex items-center gap-3 p-2 hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg text-black dark:text-white"
           >
             <SquarePen size={20} />
             New Chat
           </button>
           <button
             onClick={() => setIsSearchDialogOpen(true)}
-            className="w-full flex items-center gap-3 p-2 hover:bg-gray-200  rounded-lg"
+            className="w-full flex items-center gap-3 p-2 hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg text-black dark:text-white"
           >
             <Search size={20} />
             Search chats
           </button>
         </SidebarGroup>
+
         <SidebarGroup>
-          <SidebarGroupLabel>Recent Chats</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-black dark:text-white">
+            Recent Chats
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <ScrollArea className="h-[calc(90vh-220px)]">
               <SidebarMenu>
@@ -127,31 +132,26 @@ export function ChatSidebar() {
                     </SidebarMenuItem>
                   ))
                 ) : chats.length === 0 ? (
-                  <div className="p-4 text-center text-muted-foreground">
+                  <div className="p-4 text-center text-muted-foreground dark:text-neutral-500">
                     No chats yet. Start a new conversation!
                   </div>
                 ) : (
                   chats.map((chat) => (
                     <SidebarMenuItem key={chat._id}>
                       {editingId === chat._id ? (
-                        <div className="flex items-center  gap-1">
+                        <div className="flex items-center gap-1 w-full">
                           <Input
                             value={editTitle}
                             onChange={(e) => setEditTitle(e.target.value)}
                             onFocus={(e) => e.target.select()}
-                            className="w-full pl-10 pr-10 py-2 rounded-lg text-black placeholder:text-neutral-400 
-    border-none focus:outline-none focus:ring-0 focus:border-none focus:ring-offset-0 shadow-none"
+                            className="w-full pl-10 pr-10 py-2 rounded-lg text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 bg-transparent border-none focus:outline-none focus:ring-0 focus:border-none focus:ring-offset-0 shadow-none"
                             style={{ boxShadow: "none" }}
                             onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                handleEditSave(chat._id);
-                              } else if (e.key === "Escape") {
-                                handleEditCancel();
-                              }
+                              if (e.key === "Enter") handleEditSave(chat._id);
+                              else if (e.key === "Escape") handleEditCancel();
                             }}
                             autoFocus
                           />
-
                           <Button
                             size="sm"
                             variant="ghost"
@@ -174,25 +174,23 @@ export function ChatSidebar() {
                           <SidebarMenuButton
                             onClick={() => handleChatClick(chat._id)}
                             isActive={currentChat?._id === chat._id}
-                            className="flex   justify-between group/chat-btn"
+                            className="flex justify-between group/chat-btn text-black dark:text-white"
                           >
                             <div className="overflow-hidden text-nowrap">
                               <div className="w-44">{chat.title}</div>
                             </div>
-                            <div className="justify-end ">
-                              <ChatActionsDropdown
-                                chatName={chat.title}
-                                onRename={() =>
-                                  handleEditStart(chat._id, chat.title)
-                                }
-                                onDelete={() =>
-                                  handleDelete(chat._id, chat.title)
-                                }
-                                onShare={() =>
-                                  console.log("Share chat", chat._id)
-                                }
-                              />
-                            </div>
+                            <ChatActionsDropdown
+                              chatName={chat.title}
+                              onRename={() =>
+                                handleEditStart(chat._id, chat.title)
+                              }
+                              onDelete={() =>
+                                handleDelete(chat._id, chat.title)
+                              }
+                              onShare={() =>
+                                console.log("Share chat", chat._id)
+                              }
+                            />
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       )}
@@ -206,12 +204,9 @@ export function ChatSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        {/* <PricingDialog/> */}
         <button
-          onClick={(e) => {
-            router.push(`/pricing`);
-          }}
-          className="w-full flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg"
+          onClick={() => router.push(`/pricing`)}
+          className="w-full flex items-center gap-3 p-2 hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg text-black dark:text-white"
         >
           <Sparkles size={20} />
           <div className="flex flex-col justify-start items-start gap-1">
