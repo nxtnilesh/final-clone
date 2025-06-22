@@ -1,45 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
-import {
-  Plus,
-  MessageSquare,
-  Trash2,
-  Edit2,
-  Check,
-  X,
-  SquarePen,
-  Search,
-  Sparkles,
-  Ellipsis,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuAction,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useChats } from "@/hooks/use-chats";
 import { useChatStore } from "@/lib/store";
+import { Check, Search, Sparkles, SquarePen, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaRobot } from "react-icons/fa";
-import { ChatSearchDialog } from "./chat-search-dialog";
 import { ChatActionsDropdown } from "./chat-dropdown";
+import { ChatSearchDialog } from "./chat-search-dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function ChatSidebar() {
+  const isMobile = useIsMobile();
   const router = useRouter();
   const { chats, isLoadingChats, createChat, deleteChat, updateChatTitle } =
     useChats();
@@ -47,18 +36,23 @@ export function ChatSidebar() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
 
+  const closeSidebarOnMobile = () => {
+    
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  };
   const handleNewChat = async () => {
     try {
-      // const newChat = await createChat()
-      // router.push(`/chat/${newChat._id}`)
-
       router.push(`/chat/`);
+      closeSidebarOnMobile();
     } catch (error) {
       console.error("Failed to create chat:", error);
     }
   };
 
   const handleChatClick = (chatId: string) => {
+    // setSidebarOpen(false);
     router.push(`/chat/${chatId}`);
   };
 
@@ -88,13 +82,13 @@ export function ChatSidebar() {
   };
 
   const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
-
+  const { sidebarOpen, setSidebarOpen } = useChatStore();
   return (
     <Sidebar>
       <SidebarHeader className="p-4 ">
         <div className="flex justify-between">
-        <FaRobot size={25} onClick={handleNewChat} />
-        <SidebarTrigger size="icon" />
+          <FaRobot size={25} onClick={handleNewChat} />
+          <SidebarTrigger size="icon" />
         </div>
       </SidebarHeader>
 
@@ -106,14 +100,14 @@ export function ChatSidebar() {
           />
           <button
             onClick={handleNewChat}
-            className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg"
+            className="w-full flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg"
           >
             <SquarePen size={20} />
             New Chat
           </button>
           <button
             onClick={() => setIsSearchDialogOpen(true)}
-            className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg"
+            className="w-full flex items-center gap-3 p-2 hover:bg-gray-200  rounded-lg"
           >
             <Search size={20} />
             Search chats
@@ -122,7 +116,7 @@ export function ChatSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Recent Chats</SidebarGroupLabel>
           <SidebarGroupContent>
-            <ScrollArea className="h-[calc(100vh-200px)]">
+            <ScrollArea className="h-[calc(80vh-200px)]">
               <SidebarMenu>
                 {isLoadingChats ? (
                   Array.from({ length: 5 }).map((_, i) => (
@@ -177,9 +171,7 @@ export function ChatSidebar() {
                             className="flex   justify-between group/chat-btn"
                           >
                             <div className="overflow-hidden text-nowrap">
-                              <div className="w-44">
-                                {chat.title}
-                              </div>
+                              <div className="w-44">{chat.title}</div>
                             </div>
                             <div className="justify-end ">
                               <ChatActionsDropdown
@@ -210,7 +202,7 @@ export function ChatSidebar() {
       <SidebarFooter className="p-4">
         <button
           onClick={handleNewChat}
-          className="w-full flex items-center gap-3 p-2 hover:bg-neutral-800 rounded-lg"
+          className="w-full flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg"
         >
           <Sparkles size={20} />
           <div className="flex flex-col justify-start items-start gap-1">

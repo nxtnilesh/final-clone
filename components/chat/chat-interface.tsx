@@ -152,14 +152,14 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       ) : null}
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col rounded-3xl bg-neutral-900  shadow-lg p-1 dark:bg-neutral-700  light:bg-neutral-100 light:border-neutral-200"
+        className="flex flex-col rounded-3xl  border shadow-lg p-1  light:bg-neutral-100 light:border-neutral-200"
       >
         <textarea
           value={input}
           onChange={handleInputChange}
           placeholder="Ask anything..."
           disabled={isLoading}
-          className=" px-3 pt-3 focus:border-none focus:outline-none w-full resize-none overflow-y-auto bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-neutral-200 dark:text-white dark:placeholder:text-neutral-500 light:text-black light:placeholder:text-neutral-500 min-h-[40px] max-h-[420px]"
+          className=" px-3 pt-3 text-black focus:border-none focus:outline-none w-full resize-none overflow-y-auto placeholder:text-black bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[40px] max-h-[420px]"
           onInput={(e) => {
             const textarea = e.currentTarget;
             textarea.style.height = "auto"; // Reset first
@@ -203,7 +203,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             {isListening ? (
               <Pause className="h-5 w-5 text-blue-600" />
             ) : (
-              <Mic className="h-9 w-9 hover:bg-gray-500 p-2 rounded-full font-extrabold mx-2  text-white" />
+              <Mic className="h-9 w-9 hover:bg-gray-200 p-2 rounded-full font-extrabold mx-2  text-black" />
             )}
           </button>
           <button
@@ -212,31 +212,37 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             // size="icon"
           >
             {status === "ready" ? (
-              <ArrowUp className="h-9 w-9 hover:bg-gray-500 p-1 rounded-full font-extrabold mx-2  text-white" />
+              <ArrowUp className="h-9 w-9 hover:bg-gray-200 p-1 rounded-full font-extrabold mx-2  text-black" />
             ) : (
               <FaStopCircle className="bg-white font-extrabold w-6 h-6" />
             )}
           </button>
         </div>
       </form>
+      <p className="text-gray-900 text-[10px] text-center mt-1
+      ">ChatGPT can make mistakes. Check important info. See Cookie Preferences.</p>
     </div>
   );
 
   if (isLoadingCurrentChat) {
     return (
-      <div className="flex items-center justify-center h-full bg-neutral-800">
+      <div className="flex items-center justify-center h-full ">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
   }
-
   if (messages.length === 0)
     return (
-      <div className="flex flex-col justify-center bg-green-600 ">
-        <div className="sticky top-0 z-50 right-0 left-0">
+      <div className="flex flex-col min-h-screen ">
+        {/* Sticky Header at the Top */}
+        <div className="sticky top-0 z-50 w-full">
           <Header />
         </div>
-        <div>{renderInputForm()}</div>
+
+        {/* Centered Form */}
+        <div className="flex-1 grid place-items-center">
+          {renderInputForm()}
+        </div>
       </div>
     );
 
@@ -251,7 +257,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
       <div>
         {/* Messages */}
-        <ScrollArea className=" my-2  h-[calc(100vh-2rem)] p-4  bg-blue-500">
+        <ScrollArea className="  h-[calc(80vh-2rem)] p-4  ">
           <div className="max-w-4xl mx-auto bg-re">
             {messages.map((message) => (
               <ChatMessage
@@ -293,7 +299,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
       {/* Input */}
       <div
-        className={`w-full sticky bottom-0 bg-neutral-800 ${
+        className={`w-full sticky bottom-0  ${
           messages.length === 0 ? " flex  justify-center p-4" : "p-4 "
         }`}
       >

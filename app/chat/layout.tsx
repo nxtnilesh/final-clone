@@ -3,6 +3,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
 import { useChatStore } from "@/lib/store"
+import { useEffect } from "react"
 
 
 export default function ChatLayout({
@@ -10,6 +11,10 @@ export default function ChatLayout({
 }: {
   children: React.ReactNode
 }) {
+
+  // useEffect (() => {
+
+  // },[setSidebarOpen,setSidebarOpen])
   const {sidebarOpen,setSidebarOpen} = useChatStore();
   console.log("sidebar main",sidebarOpen);
   

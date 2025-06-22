@@ -66,7 +66,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
           isUser
             ? `${
                 isEditing ? "w-full" : "w-auto"
-              } bg-neutral-700 px-3 py-1 text-white dark:text-white`
+              }  px-3 py-1 text-black bg-gray-50 dark:text-white`
             : "p-2 w-full md:max-w-3xl border-none"
         }`}
       >
@@ -90,6 +90,136 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
           ) : (
             <div>
               <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  code({ inline, className, children, ...rest }: any) {
+                    const match = /language-(\w+)/.exec(className || "");
+                    return !inline && match ? (
+                      <SyntaxHighlighter
+                        style={oneDark}
+                        language={match[1]}
+                        PreTag="div"
+                        customStyle={
+                          {
+                            padding: "1rem",
+                            borderRadius: "0.5rem",
+                            fontSize: "0.875rem",
+                            overflowX: "auto",
+                          } as React.CSSProperties
+                        }
+                        {...rest}
+                      >
+                        {String(children).replace(/\n$/, "")}
+                      </SyntaxHighlighter>
+                    ) : (
+                      <code
+                        className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono break-words"
+                        {...rest}
+                      >
+                        {children}
+                      </code>
+                    );
+                  },
+                  h1: ({ node, ...props }) => (
+                    <h1 className="text-2xl font-bold mt-6 mb-2" {...props} />
+                  ),
+                  h2: ({ node, ...props }) => (
+                    <h2
+                      className="text-xl font-semibold mt-5 mb-2"
+                      {...props}
+                    />
+                  ),
+                  h3: ({ node, ...props }) => (
+                    <h3
+                      className="text-lg font-semibold mt-4 mb-1"
+                      {...props}
+                    />
+                  ),
+                  hr: () => <hr className="my-6 border-t border-muted" />,
+                  p: ({ node, ...props }) => (
+                    <p className="mb-4 leading-relaxed text-base" {...props} />
+                  ),
+                  li: ({ node, ...props }) => (
+                    <li className="ml-6 list-disc leading-relaxed" {...props} />
+                  ),
+                  ul: ({ node, ...props }) => (
+                    <ul
+                      className="mb-4 list-disc list-outside pl-4"
+                      {...props}
+                    />
+                  ),
+                  ol: ({ node, ...props }) => (
+                    <ol
+                      className="mb-4 list-decimal list-outside pl-4"
+                      {...props}
+                    />
+                  ),
+                  blockquote: ({ node, ...props }) => (
+                    <blockquote
+                      className="border-l-4 pl-4 italic text-muted-foreground my-4"
+                      {...props}
+                    />
+                  ),
+                  a: ({ node, ...props }) => (
+                    <a
+                      className="text-blue-600 underline hover:text-blue-800 transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      {...props}
+                    />
+                  ),
+                  img: ({ node, ...props }) => (
+                    <img
+                      className="rounded-md shadow-md my-4 max-w-full h-auto"
+                      alt={props.alt || ""}
+                      {...props}
+                    />
+                  ),
+                  strong: ({ node, ...props }) => (
+                    <strong className="font-semibold" {...props} />
+                  ),
+                  em: ({ node, ...props }) => (
+                    <em className="italic" {...props} />
+                  ),
+                  table: ({ node, ...props }) => (
+                    <div className="overflow-x-auto my-4">
+                      <table
+                        className="w-full border-collapse border border-muted"
+                        {...props}
+                      />
+                    </div>
+                  ),
+                  th: ({ node, ...props }) => (
+                    <th
+                      className="border border-muted px-3 py-2 bg-muted text-left text-sm font-semibold"
+                      {...props}
+                    />
+                  ),
+                  td: ({ node, ...props }) => (
+                    <td
+                      className="border border-muted px-3 py-2 text-sm"
+                      {...props}
+                    />
+                  ),
+                  input: ({ node, ...props }) => {
+                    if (props.type === "checkbox") {
+                      return (
+                        <input
+                          type="checkbox"
+                          className="mr-2 accent-blue-500"
+                          disabled
+                          checked={props.checked}
+                        />
+                      );
+                    }
+                    return <input {...props} />;
+                  },
+                }}
+              >
+                {message.content}
+              </ReactMarkdown>
+
+              {/* <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
                   code(props: any) {
@@ -137,7 +267,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
                 }}
               >
                 {message.content}
-              </ReactMarkdown>
+              </ReactMarkdown> */}
             </div>
           )}
         </div>

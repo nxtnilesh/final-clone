@@ -12,18 +12,21 @@ export default function Header() {
   const { sidebarOpen } = useChatStore();
 
   return (
-    <header className=" flex h-14 w-full items-center justify-between gap-4 border-b bg-[#202123] px-4 md:px-6">
-      {!sidebarOpen && <SidebarTrigger />}
+    <header className=" flex h-14 w-full items-center justify-between gap-4 border-b  px-4 md:px-6">
+      <div className="text-black">
+
+      {!sidebarOpen && <SidebarTrigger size={"icon"}/>}
+      </div>
       
       {/* ChatGPT Title - hidden on small screens */}
-      <div className="hidden md:flex items-center gap-2 text-lg font-medium text-white">
+      <div className="hidden md:flex w-full items-center gap-2 text-lg font-medium text-black">
         <span>ChatGPT</span>
         <ChevronDown className="h-4 w-4 text-gray-400" />
       </div>
 
       {/* Get Plus button */}
-      <div className="flex items-center gap-4">
-        <button className="bg-[#3d2a88] flex items-center justify-center px-2 py-1 text-xs text-white rounded-full hover:bg-[#584899]/90">
+      <div className="flex items-center justify-center sm:justify-start gap-4 w-full ">
+        <button className="bg-[#3d2a88] flex items-center justify-center p-3 text-xs text-white rounded-full hover:bg-[#584899]/90">
           <Sparkles className="mr-2 h-4 w-4 " />
           Get Plus
         </button>
@@ -34,7 +37,7 @@ export default function Header() {
         {/* Share Button - text hidden on small screens */}
         <Button
           variant="ghost"
-          className="text-white hover:bg-neutral-700 hover:text-white rounded-3xl"
+          className="text-black hover:bg-gray-200 rounded-3xl"
         >
           <Share className="h-4 w-4 mr-0 md:mr-2" />
           <span className="hidden md:inline">Share</span>
@@ -44,7 +47,7 @@ export default function Header() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-white hover:bg-neutral-700 hover:text-white"
+          className="text-black hover:bg-gray-200"
         >
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">More options</span>
@@ -52,7 +55,7 @@ export default function Header() {
 
         {/* UserButton - hidden on small screens */}
         <div className="hidden md:flex items-center justify-center">
-          <button className="bg-transparent rounded-full p-1 hover:bg-neutral-700 flex items-center justify-center">
+          <button className="bg-transparent rounded-full p-1 hover:bg-gray-200 flex items-center justify-center">
             <UserButton />
           </button>
         </div>
