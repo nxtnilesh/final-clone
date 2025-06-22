@@ -4,7 +4,7 @@ import type { Chat } from "./store";
 import { UIMessage } from "ai";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://final-clone-sigma.vercel.app/api",
   timeout: 30000,
 });
 
