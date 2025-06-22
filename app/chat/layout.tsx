@@ -19,7 +19,7 @@ export default function ChatLayout({
   console.log("sidebar main",sidebarOpen);
   
   return (
-    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen} defaultOpen={true}>
       <div className="flex min-h-screen w-full">
         <ChatSidebar />
         <SidebarInset className="flex-1">{children}</SidebarInset>

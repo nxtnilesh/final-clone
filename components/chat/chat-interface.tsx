@@ -26,7 +26,6 @@ import { chatApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { ChatMessage } from "./chat-message";
 import { UIMessage } from "ai";
-import { set } from "date-fns";
 import { Textarea } from "../ui/textarea";
 import { FaStopCircle } from "react-icons/fa";
 import { ChatFileUploader } from "./chat-file-upload";
