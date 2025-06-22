@@ -12,9 +12,6 @@ export default function ChatLayout({
   children: React.ReactNode
 }) {
 
-  // useEffect (() => {
-
-  // },[setSidebarOpen,setSidebarOpen])
   const {sidebarOpen,setSidebarOpen} = useChatStore();
   console.log("sidebar main",sidebarOpen);
   

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ChevronDown, Sparkles, Share, MoreHorizontal } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { User } from "@clerk/nextjs/server";
 import { UserButton } from "@clerk/nextjs";
 import { useChatStore } from "@/lib/store";
 import { Badge } from "./ui/badge";
@@ -18,10 +17,9 @@ export default function Header() {
   return (
     <header className=" flex h-14 w-full items-center justify-between gap-4 border-b  px-4 md:px-6">
       <div className="text-black">
-
-      {!sidebarOpen && <SidebarTrigger size={"icon"}/>}
+        {!sidebarOpen && <SidebarTrigger size={"icon"} />}
       </div>
-      
+
       {/* ChatGPT Title - hidden on small screens */}
       <div className="hidden md:flex w-full items-center gap-2 text-lg font-medium text-black">
         <span>ChatGPT</span>
@@ -29,19 +27,20 @@ export default function Header() {
       </div>
 
       {/* Get Plus button */}
-      <div  onClick={(e) => {
+      <div className="flex items-center justify-center sm:justify-start gap-4 w-full ">
+        <Badge
+          onClick={(e) => {
             router.push(`/pricing`);
-          }} className="flex items-center justify-center sm:justify-start gap-4 w-full ">
-        <Badge className="bg-[#3d2a88] hover:cursor-pointer flex items-center justify-center px-3 py-1 text-xs text-white rounded-full hover:bg-[#584899]/90">
+          }}
+          className="bg-[#3d2a88] hover:cursor-pointer flex items-center justify-center px-3 py-1 text-xs text-white rounded-full hover:bg-[#584899]/90"
+        >
           <Sparkles className="mr-2 h-4 w-4 " />
           Get Plus
         </Badge>
       </div>
-  <ThemeToggle/>
+      <ThemeToggle />
       {/* Right side actions */}
       <div className="flex items-center justify-center bg-re gap-2">
-        
-      
         {/* <Button
           variant="ghost"
           className="text-black hover:bg-gray-200 rounded-3xl"
@@ -61,7 +60,7 @@ export default function Header() {
         </Button> */}
 
         {/* UserButton - hidden on small screens */}
-        <div className="hidden md:flex items-center justify-center">
+        <div className="md:flex items-center justify-center">
           <button className="bg-transparent rounded-full p-1 hover:bg-gray-200 flex items-center justify-center">
             <UserButton />
           </button>

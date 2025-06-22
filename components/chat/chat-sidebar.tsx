@@ -51,7 +51,7 @@ export function ChatSidebar() {
   };
 
   const handleChatClick = (chatId: string) => {
-    // setSidebarOpen(false);
+    setSidebarOpen(false);
     router.push(`/chat/${chatId}`);
   };
 
@@ -87,7 +87,10 @@ export function ChatSidebar() {
       <SidebarHeader className="p-4 ">
         <div className="flex justify-between">
           <FaRobot size={25} onClick={handleNewChat} />
-          <SidebarTrigger size="icon" />
+          <SidebarTrigger
+            size="icon"
+            
+          />
         </div>
       </SidebarHeader>
 

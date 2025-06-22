@@ -41,7 +41,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
     }
   };
 
-  console.log("before edit", message);
+  console.log("message", message);
 
   const handleSaveEdit = () => {
     console.log("edit message", editContent);
@@ -61,8 +61,8 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
         isUser ? "flex-row-reverse" : ""
       }`}
     >
-      <Card
-        className={`group  relative transition-all bg-transparent overflow-x-auto w-full ${
+      <div
+        className={`group text-black relative transition-all bg-transparent overflow-x-auto w-full ${
           isUser
             ? `${
                 isEditing ? "w-full" : "w-auto"
@@ -70,15 +70,16 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
             : "p-2 w-full md:max-w-3xl border-none"
         }`}
       >
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 max-w-3xl">
           {isEditing ? (
             <div className="w-full flex flex-col items-end">
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full min-h-[100px] bg-transparent text-white placeholder:text-muted-foreground border-none outline-none focus:outline-none focus:ring-0 shadow-none resize-none"
+                className="w-full min-h-[100px] bg-transparent text-black placeholder:text-muted-foreground border-none outline-none focus:outline-none focus:ring-0 shadow-sm resize-none border"
+                autoFocus={true}
               />
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-2 ">
                 <Button size="sm" variant="outline" onClick={handleCancelEdit}>
                   Cancel
                 </Button>
@@ -88,219 +89,184 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
               </div>
             </div>
           ) : (
-            <div>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  code({ inline, className, children, ...rest }: any) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline && match ? (
-                      <SyntaxHighlighter
-                        style={oneDark}
-                        language={match[1]}
-                        PreTag="div"
-                        customStyle={
-                          {
-                            padding: "1rem",
-                            borderRadius: "0.5rem",
-                            fontSize: "0.875rem",
-                            overflowX: "auto",
-                          } as React.CSSProperties
-                        }
-                        {...rest}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code
-                        className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono break-words"
-                        {...rest}
-                      >
-                        {children}
-                      </code>
-                    );
-                  },
-                  h1: ({ node, ...props }) => (
-                    <h1 className="text-2xl font-bold mt-6 mb-2" {...props} />
-                  ),
-                  h2: ({ node, ...props }) => (
-                    <h2
-                      className="text-xl font-semibold mt-5 mb-2"
-                      {...props}
-                    />
-                  ),
-                  h3: ({ node, ...props }) => (
-                    <h3
-                      className="text-lg font-semibold mt-4 mb-1"
-                      {...props}
-                    />
-                  ),
-                  hr: () => <hr className="my-6 border-t border-muted" />,
-                  p: ({ node, ...props }) => (
-                    <p className="mb-4 leading-relaxed text-base" {...props} />
-                  ),
-                  li: ({ node, ...props }) => (
-                    <li className="ml-6 list-disc leading-relaxed" {...props} />
-                  ),
-                  ul: ({ node, ...props }) => (
-                    <ul
-                      className="mb-4 list-disc list-outside pl-4"
-                      {...props}
-                    />
-                  ),
-                  ol: ({ node, ...props }) => (
-                    <ol
-                      className="mb-4 list-decimal list-outside pl-4"
-                      {...props}
-                    />
-                  ),
-                  blockquote: ({ node, ...props }) => (
-                    <blockquote
-                      className="border-l-4 pl-4 italic text-muted-foreground my-4"
-                      {...props}
-                    />
-                  ),
-                  a: ({ node, ...props }) => (
-                    <a
-                      className="text-blue-600 underline hover:text-blue-800 transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      {...props}
-                    />
-                  ),
-                  img: ({ node, ...props }) => (
-                    <img
-                      className="rounded-md shadow-md my-4 max-w-full h-auto"
-                      alt={props.alt || ""}
-                      {...props}
-                    />
-                  ),
-                  strong: ({ node, ...props }) => (
-                    <strong className="font-semibold" {...props} />
-                  ),
-                  em: ({ node, ...props }) => (
-                    <em className="italic" {...props} />
-                  ),
-                  table: ({ node, ...props }) => (
-                    <div className="overflow-x-auto my-4">
-                      <table
-                        className="w-full border-collapse border border-muted"
+            <div
+              className={`flex ${
+                isUser ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div className={` ${
+                isUser ? "justify-end bg-gray-200 px-3 pt-2 rounded-2xl" : "justify-start"
+              }`}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    code({ inline, className, children, ...rest }: any) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !inline && match ? (
+                        <SyntaxHighlighter
+                          style={oneDark}
+                          language={match[1]}
+                          PreTag="div"
+                          customStyle={
+                            {
+                              padding: "1rem",
+                              borderRadius: "0.5rem",
+                              fontSize: "0.875rem",
+                              overflowX: "auto",
+                            } as React.CSSProperties
+                          }
+                          {...rest}
+                        >
+                          {String(children).replace(/\n$/, "")}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code
+                          className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono break-words"
+                          {...rest}
+                        >
+                          {children}
+                        </code>
+                      );
+                    },
+                    h1: ({ node, ...props }) => (
+                      <h1 className="text-2xl font-bold mt-6 mb-2" {...props} />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <h2
+                        className="text-xl font-semibold mt-5 mb-2"
                         {...props}
                       />
-                    </div>
-                  ),
-                  th: ({ node, ...props }) => (
-                    <th
-                      className="border border-muted px-3 py-2 bg-muted text-left text-sm font-semibold"
-                      {...props}
-                    />
-                  ),
-                  td: ({ node, ...props }) => (
-                    <td
-                      className="border border-muted px-3 py-2 text-sm"
-                      {...props}
-                    />
-                  ),
-                  input: ({ node, ...props }) => {
-                    if (props.type === "checkbox") {
-                      return (
-                        <input
-                          type="checkbox"
-                          className="mr-2 accent-blue-500"
-                          disabled
-                          checked={props.checked}
+                    ),
+                    h3: ({ node, ...props }) => (
+                      <h3
+                        className="text-lg font-semibold mt-4 mb-1"
+                        {...props}
+                      />
+                    ),
+                    hr: () => <hr className="my-6 border-t border-muted" />,
+                    p: ({ node, ...props }) => (
+                      <p
+                        className="mb-4 leading-relaxed text-base"
+                        {...props}
+                      />
+                    ),
+                    li: ({ node, ...props }) => (
+                      <li
+                        className="ml-6 list-disc leading-relaxed"
+                        {...props}
+                      />
+                    ),
+                    ul: ({ node, ...props }) => (
+                      <ul
+                        className="mb-4 list-disc list-outside pl-4"
+                        {...props}
+                      />
+                    ),
+                    ol: ({ node, ...props }) => (
+                      <ol
+                        className="mb-4 list-decimal list-outside pl-4"
+                        {...props}
+                      />
+                    ),
+                    blockquote: ({ node, ...props }) => (
+                      <blockquote
+                        className="border-l-4 pl-4 italic text-muted-foreground my-4"
+                        {...props}
+                      />
+                    ),
+                    a: ({ node, ...props }) => (
+                      <a
+                        className="text-blue-600 underline hover:text-blue-800 transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        {...props}
+                      />
+                    ),
+                    img: ({ node, ...props }) => (
+                      <img
+                        className="rounded-md shadow-md my-4 max-w-full h-auto"
+                        alt={props.alt || ""}
+                        {...props}
+                      />
+                    ),
+                    strong: ({ node, ...props }) => (
+                      <strong className="font-semibold" {...props} />
+                    ),
+                    em: ({ node, ...props }) => (
+                      <em className="italic" {...props} />
+                    ),
+                    table: ({ node, ...props }) => (
+                      <div className="overflow-x-auto my-4">
+                        <table
+                          className="w-full border-collapse border border-muted"
+                          {...props}
                         />
-                      );
-                    }
-                    return <input {...props} />;
-                  },
-                }}
-              >
-                {message.content}
-              </ReactMarkdown>
-
-              {/* <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  code(props: any) {
-                    const { inline, className, children, ...rest } = props;
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline && match ? (
-                      <SyntaxHighlighter
-                        style={oneDark}
-                        language={match[1]}
-                        PreTag="div"
-                        customStyle={{
-                          padding: "1rem",
-                          borderRadius: "0.5rem",
-                          fontSize: "0.875rem",
-                          overflowX: "auto",
-                        }}
-                        {...rest}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code
-                        className="bg-muted px-1 py-0.5 rounded text-sm"
-                        {...rest}
-                      >
-                        {children}
-                      </code>
-                    );
-                  },
-                  h1: ({ node, ...props }) => (
-                    <h1 className="text-xl font-bold mt-4 mb-2" {...props} />
-                  ),
-                  h2: ({ node, ...props }) => (
-                    <h2
-                      className="text-lg font-semibold mt-3 mb-1"
-                      {...props}
-                    />
-                  ),
-                  li: ({ node, ...props }) => (
-                    <li className="ml-4 list-disc" {...props} />
-                  ),
-                  p: ({ node, ...props }) => (
-                    <p className="mb-3 leading-relaxed" {...props} />
-                  ),
-                }}
-              >
-                {message.content}
-              </ReactMarkdown> */}
+                      </div>
+                    ),
+                    th: ({ node, ...props }) => (
+                      <th
+                        className="border border-muted px-3 py-2 bg-muted text-left text-sm font-semibold"
+                        {...props}
+                      />
+                    ),
+                    td: ({ node, ...props }) => (
+                      <td
+                        className="border border-muted px-3 py-2 text-sm"
+                        {...props}
+                      />
+                    ),
+                    input: ({ node, ...props }) => {
+                      if (props.type === "checkbox") {
+                        return (
+                          <input
+                            type="checkbox"
+                            className="mr-2 accent-blue-500"
+                            disabled
+                            checked={props.checked}
+                          />
+                        );
+                      }
+                      return <input {...props} />;
+                    },
+                  }}
+                >
+                  {message.content}
+                </ReactMarkdown>
+              </div>
             </div>
           )}
-        </div>
-
-        {!isEditing && (
-          <div
-            className={`flex justify-end gap-2 mt-2 transition-opacity ${
-              isUser ? "group-hover:opacity-100" : "opacity-100"
-            }`}
-          >
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => handleCopy(message.content)}
+          {!isEditing && (
+            <div
+              className={`flex opacity-0  group-hover/button:opacity-100  gap-2 mt-1 transition-opacity ${
+                isUser
+                  ? "group-hover:opacity-100 justify-end "
+                  : "opacity-100 justify-start"
+              }`}
             >
-              {copied ? (
-                <Check className="w-4 h-4" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
-            </Button>
-            {isUser && (
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => setIsEditing(true)}
+                onClick={() => handleCopy(message.content)}
               >
-                <Edit className="w-4 h-4" />
+                {copied ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
               </Button>
-            )}
-          </div>
-        )}
-      </Card>
+              {isUser && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <Edit className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

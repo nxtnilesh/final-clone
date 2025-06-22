@@ -155,12 +155,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         className="mx-3 flex flex-col  rounded-3xl  border shadow-lg p-1  light:bg-neutral-100  light:border-neutral-200"
       >
         {fileUrl && (
-        <Image
-          src={fileUrl}
-          alt="Uploaded Preview"
-          className="max-w-xs mt-2 rounded-lg border"
-        />
-      )}
+          <Image
+            src={fileUrl}
+            alt="Uploaded Preview"
+            className="max-w-xs mt-2 rounded-lg border"
+          />
+        )}
         <textarea
           value={input}
           onChange={handleInputChange}
@@ -226,8 +226,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
           </button>
         </div>
       </form>
-      <p className="text-gray-900 text-[10px] text-center mt-1
-      ">ChatGPT can make mistakes. Check important info. See Cookie Preferences.</p>
+      <p
+        className="text-gray-900 text-[10px] text-center mt-1
+      "
+      >
+        ChatGPT can make mistakes. Check important info. See Cookie Preferences.
+      </p>
     </div>
   );
 
@@ -285,19 +289,10 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             ))}
 
             {isLoading && (
-              <div className="flex items-start gap-3">
-                <Avatar className="w-8 h-8">
-                  <AvatarFallback>AI</AvatarFallback>
-                </Avatar>
-                <Card className="flex-1 p-4">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm text-muted-foreground">
-                      Thinking...
-                    </span>
-                  </div>
-                </Card>
-              </div>
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-black "></span>
+              </span>
             )}
           </div>
           <div ref={bottomRef} />
