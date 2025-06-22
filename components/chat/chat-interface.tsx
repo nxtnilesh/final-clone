@@ -32,6 +32,7 @@ import { FaStopCircle } from "react-icons/fa";
 import { ChatFileUploader } from "./chat-file-upload";
 import useSpeechRecognition from "@/hooks/use-speechRecogination";
 import Header from "../header";
+import Image from "next/image";
 
 interface ChatInterfaceProps {
   chatId?: string;
@@ -142,7 +143,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   };
 
   const renderInputForm = () => (
-    <div className="max-w-4xl w-full mx-auto ">
+    <div className="max-w-4xl w-full mx-auto  ">
       {messages.length === 0 ? (
         <div className="text-center  py-6">
           <h2 className="text-2xl font-semibold mb-2">
@@ -152,8 +153,15 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       ) : null}
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col rounded-3xl  border shadow-lg p-1  light:bg-neutral-100 light:border-neutral-200"
+        className="mx-3 flex flex-col  rounded-3xl  border shadow-lg p-1  light:bg-neutral-100  light:border-neutral-200"
       >
+        {fileUrl && (
+        <Image
+          src={fileUrl}
+          alt="Uploaded Preview"
+          className="max-w-xs mt-2 rounded-lg border"
+        />
+      )}
         <textarea
           value={input}
           onChange={handleInputChange}

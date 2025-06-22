@@ -37,7 +37,6 @@ export function ChatSidebar() {
   const [editTitle, setEditTitle] = useState("");
 
   const closeSidebarOnMobile = () => {
-    
     if (isMobile) {
       setSidebarOpen(false);
     }
@@ -116,7 +115,7 @@ export function ChatSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Recent Chats</SidebarGroupLabel>
           <SidebarGroupContent>
-            <ScrollArea className="h-[calc(80vh-200px)]">
+            <ScrollArea className="h-[calc(90vh-220px)]">
               <SidebarMenu>
                 {isLoadingChats ? (
                   Array.from({ length: 5 }).map((_, i) => (
@@ -136,7 +135,10 @@ export function ChatSidebar() {
                           <Input
                             value={editTitle}
                             onChange={(e) => setEditTitle(e.target.value)}
-                            className="h-8 text-sm"
+                            onFocus={(e) => e.target.select()}
+                            className="w-full pl-10 pr-10 py-2 rounded-lg text-black placeholder:text-neutral-400 
+    border-none focus:outline-none focus:ring-0 focus:border-none focus:ring-offset-0 shadow-none"
+                            style={{ boxShadow: "none" }}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
                                 handleEditSave(chat._id);
@@ -146,6 +148,7 @@ export function ChatSidebar() {
                             }}
                             autoFocus
                           />
+
                           <Button
                             size="sm"
                             variant="ghost"
@@ -200,8 +203,11 @@ export function ChatSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
+        {/* <PricingDialog/> */}
         <button
-          onClick={handleNewChat}
+          onClick={(e) => {
+            router.push(`/pricing`);
+          }}
           className="w-full flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg"
         >
           <Sparkles size={20} />

@@ -23,7 +23,7 @@ export function ChatActionsDropdown({
           <Ellipsis className=" w-4 h-4 opacity-0 group-hover/chat-btn:opacity-100 transition-opacity duration-200" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="w-32 rounded-2xl bg-neutral-700 px-3 py-2">
+      <DropdownMenuContent align="center" className="w-32 rounded-2xl  px-3 py-2">
         <DropdownMenuItem onClick={onRename}>
           <Edit2 className="w-4 h-4 mr-2" />
           Rename
