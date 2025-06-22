@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useChatStore } from "@/lib/store"
-import { chatApi } from "@/lib/api"
-import { useToast } from "@/hooks/use-toast"
+import { useEffect } from "react";
+import { useChatStore } from "@/lib/store";
+import { chatApi } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 export function useChats() {
   const {
@@ -16,81 +16,93 @@ export function useChats() {
     addChat,
     updateChat,
     removeChat,
-  } = useChatStore()
+  } = useChatStore();
 
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   // Load chats on mount
   useEffect(() => {
-    loadChats()
-  }, [])
+    loadChats();
+  }, []);
 
   const loadChats = async () => {
     try {
-      setIsLoadingChats(true)
-      setChatError(null)
-      const chatsData = await chatApi.getChats()
-      setChats(chatsData)
+      setIsLoadingChats(true);
+      setChatError(null);
+      const chatsData = await chatApi.getChats();
+      setChats(chatsData);
     } catch (error) {
-      const errorMessage = "Failed to load chats"
-      setChatError(errorMessage)
+      const errorMessage = "Failed to load chats";
+      setChatError(errorMessage);
       toast({
         title: "Error",
         description: errorMessage,
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoadingChats(false)
+      setIsLoadingChats(false);
     }
-  }
+  };
 
   const createChat = async (title?: string, message?: any) => {
     try {
-      const newChat = await chatApi.createChat(title,message)
-      console.log("newChat",newChat);
-      
-      addChat(newChat)
-      console.log("newChat",newChat);
-      return newChat
+      const newChat = await chatApi.createChat(title, message);
+      console.log("newChat", newChat);
+
+      addChat(newChat);
+      console.log("newChat", newChat);
+      return newChat;
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to create chat",
         variant: "destructive",
-      })
-      throw error
+      });
+      throw error;
     }
-  }
+  };
 
   const deleteChat = async (chatId: string) => {
     try {
-      await chatApi.deleteChat(chatId)
-      removeChat(chatId)
+      await chatApi.deleteChat(chatId);
+      removeChat(chatId);
       toast({
         title: "Success",
         description: "Chat deleted successfully",
-      })
+      });
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to delete chat",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   const updateChatTitle = async (chatId: string, title: string) => {
     try {
-      await chatApi.updateChat(chatId, { title })
-      updateChat(chatId, { title })
+      await chatApi.updateChat(chatId, { title });
+      updateChat(chatId, { title });
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to update chat title",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
+  const searchChatTitle = async (title: string) => {
+    try {
+      await chatApi.searchChat(title);
+      // updateChat(chatId, { title })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update chat title",
+        variant: "destructive",
+      });
+    }
+  };
 
   return {
     chats,
@@ -100,5 +112,6 @@ export function useChats() {
     createChat,
     deleteChat,
     updateChatTitle,
-  }
+    searchChatTitle
+  };
 }

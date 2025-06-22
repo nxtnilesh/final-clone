@@ -1,11 +1,12 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, X, Edit, MessageCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState, useEffect } from "react";
+import { useChats } from "@/hooks/use-chats";
+import { Edit, MessageCircle, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface ChatSearchDialogProps {
   open: boolean;
@@ -17,6 +18,7 @@ interface ChatData {
   title: string;
 }
 
+
 export function ChatSearchDialog({
   open,
   onOpenChange,
@@ -26,6 +28,7 @@ export function ChatSearchDialog({
   const [filteredChats, setFilteredChats] = useState<ChatData[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const {searchChatTitle} = useChats()
   // Debounce logic
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -36,12 +39,15 @@ export function ChatSearchDialog({
 
   // Fetch filtered chats
   useEffect(() => {
+    console.log("deb",debouncedSearchTerm);
+    
     const fetchChats = async () => {
       setLoading(true);
       try {
         const res = await fetch(
           `/api/search-chats?title=${debouncedSearchTerm}&page=1&limit=10`
         );
+        // const res = await searchChatTitle(debouncedSearchTerm);
         const data = await res.json();
         console.log("data", data.chats);
 

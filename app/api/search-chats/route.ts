@@ -4,10 +4,11 @@ import clientPromise from "@/lib/mongodb"
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
-    const query = searchParams.get("q") || ""
+    const query = searchParams.get("title") || ""
     const page = Number.parseInt(searchParams.get("page") || "1", 10)
     const limit = Number.parseInt(searchParams.get("limit") || "10", 10)
 
+    
     if (page < 1 || limit < 1) {
       return NextResponse.json({ error: "Page and limit must be positive integers." }, { status: 400 })
     }
@@ -35,7 +36,6 @@ export async function GET(request: Request) {
     // Optionally, get total count for pagination metadata
     const totalChats = await db.collection("chats").countDocuments(searchQuery)
 
-    console.log("tilte",chats);
     
     return NextResponse.json({
       chats: chats.map((chat) => ({
