@@ -9,6 +9,7 @@ import { UserButton } from "@clerk/nextjs";
 import { useChatStore } from "@/lib/store";
 import { Badge } from "./ui/badge";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "./theme-toggle";
 
 export default function Header() {
   const { sidebarOpen } = useChatStore();
@@ -36,9 +37,11 @@ export default function Header() {
           Get Plus
         </Badge>
       </div>
-
+  <ThemeToggle/>
       {/* Right side actions */}
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center bg-re gap-2">
+        
+      
         {/* <Button
           variant="ghost"
           className="text-black hover:bg-gray-200 rounded-3xl"
