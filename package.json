@@ -11,7 +11,7 @@
   "dependencies": {
     "@ai-sdk/openai": "latest",
     "@aws-sdk/credential-providers": "latest",
-    "@clerk/nextjs": "latest",
+    "@clerk/nextjs": "^6.22.0",
     "@hookform/resolvers": "^3.9.1",
     "@mongodb-js/zstd": "latest",
     "@openrouter/ai-sdk-provider": "^0.7.2",
