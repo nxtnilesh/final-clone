@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check, Edit, X, User, Bot } from "lucide-react";
+import { Copy, Check, Edit, X, User, Bot, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -262,6 +262,23 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
+              )}
+               {!isUser && (
+               <div>
+                 <Button
+                  size="sm"
+                  variant="ghost"
+                >
+                  <ThumbsUp className="w-4 h-4" />
+                </Button>
+                 <Button
+                  size="sm"
+                  variant="ghost"
+                >
+                  <ThumbsDown className="w-4 h-4" />
+                </Button>
+                 
+               </div>
               )}
             </div>
           )}
