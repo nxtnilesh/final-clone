@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
     const { userId } = await auth();
 
     if (!userId) {
+       console.log("userID");
       return new Response("Unauthorized", { status: 401 });
     }
     const { db } = await connectToDatabase();

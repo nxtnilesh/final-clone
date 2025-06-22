@@ -15,7 +15,7 @@ export default function Header() {
   const router = useRouter();
 
   return (
-    <header className=" flex h-14 w-full items-center justify-between gap-4 border-b  px-4 md:px-6">
+    <header className=" bg-white flex h-14 w-full items-center justify-between gap-4 border-b  px-4 md:px-6">
       <div className="text-black">
         {!sidebarOpen && <SidebarTrigger size={"icon"} />}
       </div>

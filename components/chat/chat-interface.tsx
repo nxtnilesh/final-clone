@@ -157,6 +157,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         {fileUrl && (
           <Image
             src={fileUrl}
+            height={250}
+            width={250}
             alt="Uploaded Preview"
             className="max-w-xs mt-2 rounded-lg border"
           />
@@ -196,10 +198,21 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             onUploadComplete={(url) => {
               setFileUrl(url);
               console.log("uploaded file url", url);
-              // append({
-              //   role: "user",
-              //   content: `![Uploaded Image](${url})`,parts:[]
-              // });
+              append({
+                role: "user",
+                content: `content: ![Uploaded Image](${url}),`,
+                // content: `[
+                //   {
+                //     type: "text",
+                //     text: ${input},
+                    
+                //   },
+                //   {
+                //     type: "image",
+                //     image: ${url},
+                //   },
+                // ],`,
+              });
             }}
           />
           <div className="w-full"></div>
@@ -266,9 +279,9 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         <Header />
       </div>
 
-      <div>
+      <div className="max-w-4xl  mx-auto">
         {/* Messages */}
-        <ScrollArea className="  h-[calc(80vh-2rem)] p-4  ">
+        <ScrollArea className="max-w-4xl   h-[calc(80vh-2rem)] p-4  ">
           <div className="max-w-4xl mx-auto bg-re">
             {messages.map((message) => (
               <ChatMessage
