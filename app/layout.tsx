@@ -25,10 +25,10 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
           {/* <Header/> */}
-          <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
+          {/* <ThemeProvider attribute="class" enableSystem disableTransitionOnChange> */}
             {children}
             <Toaster />
-          </ThemeProvider>
+          {/* </ThemeProvider> */}
         </body>
       </html>
     </ClerkProvider>

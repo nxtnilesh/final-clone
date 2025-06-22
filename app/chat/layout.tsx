@@ -1,16 +1,21 @@
-import type React from "react"
+"use client"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
+import { useChatStore } from "@/lib/store"
+
 
 export default function ChatLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const {sidebarOpen,setSidebarOpen} = useChatStore();
+  console.log("sidebar main",sidebarOpen);
+  
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="flex h-screen w-full">
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
+      <div className="flex min-h-screen w-full">
         <ChatSidebar />
         <SidebarInset className="flex-1">{children}</SidebarInset>
       </div>

@@ -141,6 +141,87 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     setIsEditingTitle(false);
   };
 
+  const renderInputForm = () => (
+    <div className="max-w-4xl w-full mx-auto ">
+      {messages.length === 0 ? (
+        <div className="text-center  py-6">
+          <h2 className="text-2xl font-semibold mb-2">
+            What are you working on?
+          </h2>
+        </div>
+      ) : null}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col rounded-3xl bg-neutral-900  shadow-lg p-1 dark:bg-neutral-700  light:bg-neutral-100 light:border-neutral-200"
+      >
+        <textarea
+          value={input}
+          onChange={handleInputChange}
+          placeholder="Ask anything..."
+          disabled={isLoading}
+          className=" px-3 pt-3 focus:border-none focus:outline-none w-full resize-none overflow-y-auto bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-neutral-200 dark:text-white dark:placeholder:text-neutral-500 light:text-black light:placeholder:text-neutral-500 min-h-[40px] max-h-[420px]"
+          onInput={(e) => {
+            const textarea = e.currentTarget;
+            textarea.style.height = "auto"; // Reset first
+            const scrollHeight = textarea.scrollHeight;
+
+            // Cap height at 420px
+            if (scrollHeight > 420) {
+              textarea.style.height = "420px"; // Lock height
+              textarea.style.overflowY = "auto"; // Enable scroll
+            } else {
+              textarea.style.height = `${scrollHeight}px`; // Grow normally
+              textarea.style.overflowY = "hidden"; // Hide scrollbar
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              if (input.trim()) {
+                handleSubmit(e);
+              }
+            }
+          }}
+        />
+
+        <div className="flex w-full items-center px-3 pb-2">
+          <ChatFileUploader
+            onUploadComplete={(url) => {
+              setFileUrl(url);
+              console.log("uploaded file url", url);
+              // append({
+              //   role: "user",
+              //   content: `![Uploaded Image](${url})`,parts:[]
+              // });
+            }}
+          />
+          <div className="w-full"></div>
+          <button
+            disabled={isLoading}
+            onClick={() => setIsSpeechActive(!isSpeechActive)}
+          >
+            {isListening ? (
+              <Pause className="h-5 w-5 text-blue-600" />
+            ) : (
+              <Mic className="h-9 w-9 hover:bg-gray-500 p-2 rounded-full font-extrabold mx-2  text-white" />
+            )}
+          </button>
+          <button
+            type="submit"
+            disabled={isLoading || !input.trim()}
+            // size="icon"
+          >
+            {status === "ready" ? (
+              <ArrowUp className="h-9 w-9 hover:bg-gray-500 p-1 rounded-full font-extrabold mx-2  text-white" />
+            ) : (
+              <FaStopCircle className="bg-white font-extrabold w-6 h-6" />
+            )}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+
   if (isLoadingCurrentChat) {
     return (
       <div className="flex items-center justify-center h-full bg-neutral-800">
@@ -149,61 +230,28 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     );
   }
 
+  if (messages.length === 0)
+    return (
+      <div className="flex flex-col justify-center bg-green-600 ">
+        <div className="sticky top-0 z-50 right-0 left-0">
+          <Header />
+        </div>
+        <div>{renderInputForm()}</div>
+      </div>
+    );
+
   return (
     <div
-      className={` h-screen  text-white dark:bg-neutral-800 dark:text-white light:bg-white light:text-black ${
-        messages.length > 0 ? null : "flex items-center justify-center"
-      }`}
+      className={` min-h-screen  text-white light:bg-white light:text-black `}
     >
-      {/* Header */}
-        {messages.length > 0 && <Header/>}
-    
-      {/* <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center gap-2">
-          <SidebarTrigger />
-          {chatId && currentChat ? (
-            <div className="flex items-center gap-2">
-              {isEditingTitle ? (
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={editTitle}
-                    onChange={(e) => setEditTitle(e.target.value)}
-                    className="h-8"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handleTitleSave();
-                      } else if (e.key === "Escape") {
-                        handleTitleCancel();
-                      }
-                    }}
-                    autoFocus
-                  />
-                  <Button size="sm" variant="ghost" onClick={handleTitleSave}>
-                    <Check className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={handleTitleCancel}>
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <h1 className="text-lg font-semibold">{currentChat.title}</h1>
-                  <Button size="sm" variant="ghost" onClick={handleTitleEdit}>
-                    <Edit2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <h1 className="text-lg font-semibold">New Chat</h1>
-          )}
-        </div>
-      </div> */}
+      <div className="sticky top-0 z-50 w-full">
+        {/* Header */}
+        <Header />
+      </div>
 
-      {/* Messages */}
-      {messages.length < 0 ? null : (
-        
-        <ScrollArea className=" p-4  bg-neutral-800">
+      <div>
+        {/* Messages */}
+        <ScrollArea className=" my-2  h-[calc(100vh-2rem)] p-4  bg-blue-500">
           <div className="max-w-4xl mx-auto bg-re">
             {messages.map((message) => (
               <ChatMessage
@@ -241,92 +289,15 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
           </div>
           <div ref={bottomRef} />
         </ScrollArea>
-      )}
+      </div>
 
       {/* Input */}
       <div
-        className={`w-full bg-neutral-800 ${
-          messages.length === 0 ? "flex-1 flex  justify-center p-4" : "p-4 "
+        className={`w-full sticky bottom-0 bg-neutral-800 ${
+          messages.length === 0 ? " flex  justify-center p-4" : "p-4 "
         }`}
       >
-        <div className="max-w-4xl w-full mx-auto ">
-          {messages.length === 0 ? (
-            <div className="text-center  py-6">
-              <h2 className="text-2xl font-semibold mb-2">
-                What are you working on?
-              </h2>
-            </div>
-          ) : null}
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col rounded-3xl bg-neutral-900  shadow-lg p-1 dark:bg-neutral-700  light:bg-neutral-100 light:border-neutral-200"
-          >
-            <textarea
-              value={input}
-              onChange={handleInputChange}
-              placeholder="Ask anything..."
-              disabled={isLoading}
-              className=" px-3 pt-3 focus:border-none focus:outline-none w-full resize-none overflow-y-auto bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-neutral-200 dark:text-white dark:placeholder:text-neutral-500 light:text-black light:placeholder:text-neutral-500 min-h-[40px] max-h-[420px]"
-              onInput={(e) => {
-                const textarea = e.currentTarget;
-                textarea.style.height = "auto"; // Reset first
-                const scrollHeight = textarea.scrollHeight;
-
-                // Cap height at 420px
-                if (scrollHeight > 420) {
-                  textarea.style.height = "420px"; // Lock height
-                  textarea.style.overflowY = "auto"; // Enable scroll
-                } else {
-                  textarea.style.height = `${scrollHeight}px`; // Grow normally
-                  textarea.style.overflowY = "hidden"; // Hide scrollbar
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  if (input.trim()) {
-                    handleSubmit(e);
-                  }
-                }
-              }}
-            />
-
-            <div className="flex w-full items-center px-3 pb-2">
-              <ChatFileUploader
-                onUploadComplete={(url) => {
-                  setFileUrl(url);
-                  console.log("uploaded file url", url);
-                  // append({
-                  //   role: "user",
-                  //   content: `![Uploaded Image](${url})`,parts:[]
-                  // });
-                }}
-              />
-              <div className="w-full"></div>
-              <button
-                disabled={isLoading}
-                onClick={() => setIsSpeechActive(!isSpeechActive)}
-              >
-                {isListening ? (
-                  <Pause className="h-5 w-5 text-blue-600" />
-                ) : (
-                  <Mic className="h-9 w-9 hover:bg-gray-500 p-2 rounded-full font-extrabold mx-2  text-white" />
-                )}
-              </button>
-              <button
-                type="submit"
-                disabled={isLoading || !input.trim()}
-                // size="icon"
-              >
-                {status === "ready" ? (
-                  <ArrowUp className="h-9 w-9 hover:bg-gray-500 p-1 rounded-full font-extrabold mx-2  text-white" />
-                ) : (
-                  <FaStopCircle className="bg-white font-extrabold w-6 h-6" />
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
+        <div>{renderInputForm()}</div>
       </div>
     </div>
   );
