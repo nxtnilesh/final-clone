@@ -10,11 +10,11 @@ export async function GET(
   try {
     const { userId } = await auth();
     const { chatId } = await params;
-    
+
     if (!userId) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-    
+
     const { db } = await connectToDatabase();
     const chat = await db.collection("chats").findOne({
       _id: new ObjectId(chatId),
@@ -25,7 +25,7 @@ export async function GET(
       return Response.json({ error: "Chat not found" }, { status: 404 });
     }
     console.log("chats", chat);
-    
+
     // return Response.json({chat,"fileUrl":chat.fileUrl});
     return Response.json(chat);
   } catch (error) {
@@ -36,11 +36,11 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { chatId: string } }
+  { params }: { params: Promise<{ chatId: string }> }
 ) {
   try {
     const { userId } = await auth();
-
+    const { chatId } = await params;
     if (!userId) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -49,7 +49,7 @@ export async function PUT(
     const { db } = await connectToDatabase();
 
     const result = await db.collection("chats").updateOne(
-      { _id: new ObjectId(params.chatId), userId },
+      { _id: new ObjectId(chatId), userId },
       {
         $set: {
           ...updates,

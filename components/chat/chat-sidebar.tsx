@@ -73,7 +73,7 @@ export function ChatSidebar() {
     setEditTitle("");
   };
 
-  const handleDelete = async (chatId: string) => {
+  const handleDelete = async (chatId: string, chatTitle: string) => {
     await deleteChat(chatId);
     if (currentChat?._id === chatId) {
       router.push("/chat");
@@ -178,18 +178,18 @@ export function ChatSidebar() {
                             </div>
                             <div className="justify-end ">
                               <ChatActionsDropdown
+                                chatName={chat.title}
                                 onRename={() =>
                                   handleEditStart(chat._id, chat.title)
                                 }
-                                onDelete={() => handleDelete(chat._id)}
+                                onDelete={() =>
+                                  handleDelete(chat._id, chat.title)
+                                }
                                 onShare={() =>
                                   console.log("Share chat", chat._id)
                                 }
                               />
                             </div>
-                            <button
-                              onClick={() => console.log("hjsd")}
-                            ></button>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       )}

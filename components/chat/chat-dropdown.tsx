@@ -6,15 +6,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Ellipsis, Edit2, Trash2, Share2 } from "lucide-react";
+import { DeleteChatDialog } from "../deletec-chat-dialog";
 
 export function ChatActionsDropdown({
   onRename,
   onDelete,
   onShare,
+  chatName
 }: {
   onRename: () => void;
   onDelete: () => void;
   onShare: () => void;
+  chatName: string;
 }) {
   return (
     <DropdownMenu>
@@ -32,13 +35,15 @@ export function ChatActionsDropdown({
           <Share2 className="w-4 h-4 mr-2" />
           Share
         </DropdownMenuItem>
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={onDelete}
           className="text-red-700 "
         >
           <Trash2 className="w-4 h-4 mr-2" />
           Delete
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
+         <DeleteChatDialog  onDelete={onDelete} chatName={chatName} />
+         
       </DropdownMenuContent>
     </DropdownMenu>
   );
