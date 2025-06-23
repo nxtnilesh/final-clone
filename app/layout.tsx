@@ -31,7 +31,7 @@ export default function RootLayout({
           >
             {children}
             <Toaster />
-          </ThemeProvider>{" "}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

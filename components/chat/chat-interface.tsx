@@ -322,18 +322,12 @@
 //   );
 // }
 
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
-import {
-  ArrowUp,
-  Pause,
-  Mic,
-  Loader2,
-} from "lucide-react";
+import { ArrowUp, Pause, Mic, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCurrentChat } from "@/hooks/use-current-chat";
@@ -347,6 +341,7 @@ import { ChatFileUploader } from "./chat-file-upload";
 import useSpeechRecognition from "@/hooks/use-speechRecogination";
 import Header from "../header";
 import Image from "next/image";
+import ExtraMobile from "../extraMobile";
 
 interface ChatInterfaceProps {
   chatId?: string;
@@ -417,12 +412,13 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   }, [currentChat, chatId, setMessages]);
 
   const renderInputForm = () => (
-    <div className="max-w-4xl w-full mx-auto">
+    <div className="max-w-3xl w-full mx-auto">
       {messages.length === 0 && (
         <div className="text-center py-6">
           <h2 className="text-2xl font-semibold mb-2 text-black dark:text-white">
             What are you working on?
           </h2>
+          <ExtraMobile/>
         </div>
       )}
       <form
@@ -443,14 +439,20 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
           onChange={handleInputChange}
           placeholder="Ask anything..."
           disabled={isLoading}
-          className="px-3 pt-3 text-black dark:text-white placeholder:text-black dark:placeholder:text-neutral-400 bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 w-full resize-none overflow-y-auto min-h-[40px] max-h-[420px]"
+          className="px-3 pt-3 text-black dark:text-white placeholder:text-black dark:placeholder:text-neutral-400 
+    bg-transparent border-none outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 
+    focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 
+    w-full resize-none overflow-y-auto min-h-[40px] max-h-[420px]"
+          style={{ boxShadow: "none" }} // remove any default box shadow
           onInput={(e) => {
             const textarea = e.currentTarget;
             textarea.style.height = "auto";
             const scrollHeight = textarea.scrollHeight;
-            textarea.style.height = scrollHeight > 420 ? "420px" : `${scrollHeight}px`;
+            textarea.style.height =
+              scrollHeight > 420 ? "420px" : `${scrollHeight}px`;
             textarea.style.overflowY = scrollHeight > 420 ? "auto" : "hidden";
           }}
+          autoFocus
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
@@ -458,6 +460,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             }
           }}
         />
+
         <div className="flex w-full items-center px-3 pb-2">
           <ChatFileUploader
             onUploadComplete={(url) => {
@@ -479,10 +482,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               <Mic className="h-9 w-9 p-2 rounded-full mx-2 text-black dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-700" />
             )}
           </button>
-          <button
-            type="submit"
-            disabled={isLoading || !input.trim()}
-          >
+          <button type="submit" disabled={isLoading || !input.trim()}>
             {status === "ready" ? (
               <ArrowUp className="h-9 w-9 p-1 rounded-full mx-2 text-black dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-700" />
             ) : (
@@ -493,6 +493,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       </form>
       <p className="text-gray-900 dark:text-gray-300 text-[10px] text-center mt-1">
         ChatGPT can make mistakes. Check important info.
+        
       </p>
     </div>
   );
@@ -523,9 +524,9 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         <Header />
       </div>
 
-      <div className="max-w-4xl mx-auto">
-        <ScrollArea className="max-w-4xl h-[calc(80vh-2rem)] p-4">
-          <div className="max-w-4xl mx-auto">
+      <div className="max-w-3xl mx-auto">
+        <ScrollArea className=" h-[calc(80vh-2rem)] p-4">
+          <div className="mx-auto">
             {messages.map((message) => (
               <ChatMessage
                 key={message.id}
@@ -549,7 +550,11 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         </ScrollArea>
       </div>
 
-      <div className={`w-full sticky bottom-0 ${messages.length === 0 ? "flex justify-center p-4" : "p-4"}`}>
+      <div
+        className={`w-full sticky bottom-0 ${
+          messages.length === 0 ? "flex justify-center p-4" : "p-4"
+        }`}
+      >
         <div>{renderInputForm()}</div>
       </div>
     </div>

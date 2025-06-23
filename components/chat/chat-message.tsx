@@ -60,7 +60,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
 
   return (
     <div
-      className={`flex  items-start gap-3 mb-6 px-4 w-full ${
+      className={`flex  items-start gap-3 mb-6 px-4 max-w-3xl ${
         isUser ? "flex-row-reverse" : ""
       }`}
     >
