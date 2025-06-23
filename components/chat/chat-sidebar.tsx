@@ -30,7 +30,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { set } from "zod";
 
 export function ChatSidebar() {
- const { isMobile, open ,toggleSidebar} = useSidebar();
+ const { isMobile, open ,toggleSidebar,setOpen} = useSidebar();
   const router = useRouter();
   const { chats, isLoadingChats, createChat, deleteChat, updateChatTitle } =
     useChats();
@@ -79,7 +79,7 @@ export function ChatSidebar() {
     const wait = await deleteChat(chatId);
     
     if (currentChat?._id === chatId) {
-      // router.push("/chat");
+      router.push("/chat");
     }
   };
 

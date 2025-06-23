@@ -21,11 +21,18 @@ export function ChatActionsDropdown({
   onShare: () => void;
   chatName: string;
 }) {
-  const [open, setOpen] = useState(false);
-  // const {open} = useSidebar()
+  // const [open, setOpen] = useState(false);
+  const { open, isMobile, setOpen } = useSidebar();
 
+  function isMobileControll() {
+    if (isMobile) {
+      console.log("movile drop",open);
+      
+      setOpen(true);
+    }
+  }
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="w-6 h-6 p-0">
           <Ellipsis className="w-4 h-4 sm:opacity-0 sm:group-hover/chat-btn:opacity-100 transition-opacity duration-200 dark:text-white " />
@@ -39,7 +46,7 @@ export function ChatActionsDropdown({
         <DropdownMenuItem
           onClick={() => {
             onRename();
-            setOpen(false);
+            isMobileControll()
           }}
         >
           <Edit2 className="w-4 h-4 mr-2" />
@@ -49,7 +56,7 @@ export function ChatActionsDropdown({
         <DropdownMenuItem
           onClick={() => {
             onShare();
-            setOpen(false);
+            isMobileControll()
           }}
         >
           <Share2 className="w-4 h-4 mr-2" />
@@ -59,9 +66,8 @@ export function ChatActionsDropdown({
         <div className="mt-1">
           <DeleteChatDialog
             onDelete={() => {
-              
               onDelete();
-              setOpen(false);
+              isMobileControll()
             }}
             chatName={chatName}
           />
