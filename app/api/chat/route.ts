@@ -50,9 +50,7 @@ export async function POST(req: NextRequest) {
     const tool = await classifyToolAndMemory(
       messages[messages.length - 1]?.content
     );
-
     console.log("messages", JSON.stringify(messages));
-
     if (tool.tool === "AI") {
       console.log("ai tools ");
       const mem0 = createMem0({
@@ -60,7 +58,6 @@ export async function POST(req: NextRequest) {
         mem0ApiKey: process.env.NEXT_MEMO_API_KEY,
         apiKey: process.env.NEXT_GOOGLE_API_KEY,
       });
-
       const result = streamText({
         model: mem0("gemini-2.0-flash-lite", {
           user_id: userId,
@@ -75,7 +72,6 @@ export async function POST(req: NextRequest) {
     - Highlight results or final answers at the end
     Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity and readability.
     `,
-
         async onFinish({ response, usage }) {
           const totalTokensUsedNow = usage.totalTokens;
 
