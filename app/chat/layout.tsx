@@ -12,11 +12,10 @@ export default function ChatLayout({
   children: React.ReactNode
 }) {
 
-  const {sidebarOpen,setSidebarOpen} = useChatStore();
-  console.log("sidebar main",sidebarOpen);
+
   
   return (
-    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen} defaultOpen={true}>
+    <SidebarProvider  defaultOpen={true}>
       <div className="flex min-h-screen w-full">
         <ChatSidebar />
         <SidebarInset className="flex-1">{children}</SidebarInset>

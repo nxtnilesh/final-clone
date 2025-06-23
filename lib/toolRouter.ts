@@ -31,6 +31,6 @@ Default to tool: "AI" and addMemory: false if unclear.
     return JSON.parse(result.text.trim());
   } catch (e) {
     console.error("Failed to parse result:", result.text);
-    return { tool: "AI", addMemory: false }; // fallback
+    return { tool: "AI", addMemory: false }; 
   }
 }

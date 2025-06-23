@@ -1,20 +1,30 @@
 import { auth } from "@clerk/nextjs/server";
 import { openai } from "@ai-sdk/openai";
-import { appendResponseMessages, streamText, UIMessage } from "ai";
+import {
+  appendResponseMessages,
+  generateText,
+  streamText,
+  UIMessage,
+} from "ai";
 import type { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { classifyToolAndMemory } from "@/lib/toolRouter";
+import { createMem0 } from "@mem0/vercel-ai-provider";
+
 export const maxDuration = 30;
+
 const openrouter = createOpenRouter({
   apiKey: process.env.NEXT_OPENROUTER_API_KEY,
 });
+
 export async function POST(req: NextRequest) {
+  let errorMessage = "";
   try {
+    const { messages, chatId, fileUrl } = await req.json();
     const { userId } = await auth();
     const { db } = await connectToDatabase();
-    const { messages, chatId, fileUrl } = await req.json();
 
     if (userId) {
       const chat = await db
@@ -25,10 +35,11 @@ export async function POST(req: NextRequest) {
         );
 
       // If limit exceeded
-      if ((chat?.tokenUsed || 0) > 2000) {
+      if ((chat?.tokenUsed || 0) > 600) {
         console.log("Token limit exceeded:", chat?.tokenUsed);
-        // throw new Error("Token size exceeded");
-        return new Response("Token Finish", { status: 200 });
+        errorMessage = "Token limit exceeded";
+        throw new Error(errorMessage);
+        // return Response.json(errorMessage);
       }
     }
 
@@ -36,22 +47,34 @@ export async function POST(req: NextRequest) {
       console.log("userID");
       return new Response("Unauthorized", { status: 401 });
     }
-    // const tool = await classifyToolAndMemory(
-    //   messages[messages.length - 1]?.content
-    // );
+    const tool = await classifyToolAndMemory(
+      messages[messages.length - 1]?.content
+    );
+
     console.log("messages", JSON.stringify(messages));
- const result = streamText({
-        model: openrouter.chat("mistralai/devstral-small:free"),
+
+    if (tool.tool === "AI") {
+      console.log("ai tools ");
+      const mem0 = createMem0({
+        provider: "google",
+        mem0ApiKey: process.env.NEXT_MEMO_API_KEY,
+        apiKey: process.env.NEXT_GOOGLE_API_KEY,
+      });
+
+      const result = streamText({
+        model: mem0("gemini-2.0-flash-lite", {
+          user_id: userId,
+        }),
         messages,
         system: `You are an expert assistant. Format your response like ChatGPT with:
-- Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
-- Bullet points for lists
-- Code blocks for any code
-- Bold or italicized keywords
-- Clear and concise explanations
-- Highlight results or final answers at the end
-Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity and readability.
-`,
+    - Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
+    - Bullet points for lists
+    - Code blocks for any code
+    - Bold or italicized keywords
+    - Clear and concise explanations
+    - Highlight results or final answers at the end
+    Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity and readability.
+    `,
 
         async onFinish({ response, usage }) {
           const totalTokensUsedNow = usage.totalTokens;
@@ -78,134 +101,162 @@ Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity an
             );
           }
         },
-        maxTokens: 100,
       });
 
-
       return result.toDataStreamResponse();
-//     if (tool.tool === "AI") {
-//       const result = streamText({
-//         model: openrouter.chat("mistralai/devstral-small:free"),
-//         messages,
-//         system: `You are an expert assistant. Format your response like ChatGPT with:
-// - Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
-// - Bullet points for lists
-// - Code blocks for any code
-// - Bold or italicized keywords
-// - Clear and concise explanations
-// - Highlight results or final answers at the end
-// Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity and readability.
-// `,
+    }
+    if (tool.tool === "Image") {
+      console.log("image tool");
+      console.log(messages);
+      errorMessage = "Image exceeds the supported token limit.";
+      throw new Error(errorMessage);
+      // const lastMessage = messages[messages.length - 1];
+      // if (fileUrl && messages?.length > 0) {
+      //   messages[messages.length - 1].content = [
+      //     {
+      //       type: "text",
+      //       text:
+      //         messages[messages.length - 1].parts?.[0]?.text ||
+      //         messages[messages.length - 1].content ||
+      //         "",
+      //       providerOptions: {
+      //         openai: { imageDetail: "low" },
+      //       },
+      //     },
+      //     {
+      //       type: "image",
+      //       image: fileUrl,
+      //     },
+      //   ];
+      // }
 
-//         async onFinish({ response, usage }) {
-//           const totalTokensUsedNow = usage.totalTokens;
+      // // console.log("message", lastMessage);
+      // console.log("message", messages);
 
-//           if (chatId) {
-//             // Continue if under limit
-//             const data = appendResponseMessages({
-//               messages,
-//               responseMessages: response.messages,
-//             });
+      // const result = streamText({
+      //   // model: openai("gpt-4o-mini"),
+      //   // model: openrouter.chat("meta-llama/llama-3.3-8b-instruct:free"),
+      //   model: openrouter.chat("google/gemma-3n-e4b-it:free"),
+      //   messages,
+      //   //         system: `You are an expert assistant. Format your response like ChatGPT with:
+      //   // - Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
+      //   // - Bullet points for lists
+      //   // - Code blocks for any code
+      //   // - Bold or italicized keywords
+      //   // - Clear and concise explanations
+      //   // - Highlight results or final answers at the end
+      //   // Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity and readability.
+      //   // `,
 
-//             await db.collection("chats").updateOne(
-//               { _id: new ObjectId(chatId), userId },
-//               {
-//                 $set: {
-//                   messages: data,
-//                   updatedAt: new Date(),
-//                   fileUrl,
-//                 },
-//                 $inc: {
-//                   tokenUsed: totalTokensUsedNow,
-//                 },
-//               }
-//             );
-//           }
-//         },
-//         maxTokens: 100,
-//       });
+      //   async onFinish({ response, usage }) {
+      //     const totalTokensUsedNow = usage.totalTokens;
 
+      //     if (chatId) {
+      //       // Continue if under limit
+      //       const data = appendResponseMessages({
+      //         messages,
+      //         responseMessages: response.messages,
+      //       });
 
-//       return result.toDataStreamResponse();
-//     }
-//     if (tool.tool === "Image") {
-//       console.log("image tool");
-//       console.log(messages);
+      //       await db.collection("chats").updateOne(
+      //         { _id: new ObjectId(chatId), userId },
+      //         {
+      //           $set: {
+      //             messages: data,
+      //             updatedAt: new Date(),
+      //             fileUrl,
+      //           },
+      //           $inc: {
+      //             tokenUsed: totalTokensUsedNow,
+      //           },
+      //         }
+      //       );
+      //     }
+      //   },
+      //   maxTokens: 100,
+      // });
 
-//       // const lastMessage = messages[messages.length - 1];
-//       if (fileUrl && messages?.length > 0) {
-//         messages[messages.length - 1].content = [
-//           {
-//             type: "text",
-//             text:
-//               messages[messages.length - 1].parts?.[0]?.text ||
-//               messages[messages.length - 1].content ||
-//               "",
-//             providerOptions: {
-//               openai: { imageDetail: "low" },
-//             },
-//           },
-//           {
-//             type: "image",
-//             image: fileUrl,
-//           },
-//         ];
-//       }
+      // Save chat to database
 
-//       // console.log("message", lastMessage);
-//       console.log("message", messages);
+      // return result.toDataStreamResponse();
+    }
+    if (tool.tool === "PDF") {
+      console.log("image tool");
+      console.log(messages);
+      errorMessage = "PDF/Fil exceeds the supported token limit.";
+      throw new Error(errorMessage);
+      // const lastMessage = messages[messages.length - 1];
+      // if (fileUrl && messages?.length > 0) {
+      //   messages[messages.length - 1].content = [
+      //     {
+      //       type: "text",
+      //       text:
+      //         messages[messages.length - 1].parts?.[0]?.text ||
+      //         messages[messages.length - 1].content ||
+      //         "",
+      //       providerOptions: {
+      //         openai: { imageDetail: "low" },
+      //       },
+      //     },
+      //     {
+      //       type: "image",
+      //       image: fileUrl,
+      //     },
+      //   ];
+      // }
 
-//       const result = streamText({
-//         // model: openai("gpt-4o-mini"),
-//         // model: openrouter.chat("meta-llama/llama-3.3-8b-instruct:free"),
-//         model: openrouter.chat("google/gemma-3n-e4b-it:free"),
-//         messages,
-//         //         system: `You are an expert assistant. Format your response like ChatGPT with:
-//         // - Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
-//         // - Bullet points for lists
-//         // - Code blocks for any code
-//         // - Bold or italicized keywords
-//         // - Clear and concise explanations
-//         // - Highlight results or final answers at the end
-//         // Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity and readability.
-//         // `,
+      // // console.log("message", lastMessage);
+      // console.log("message", messages);
 
-//         async onFinish({ response, usage }) {
-//           const totalTokensUsedNow = usage.totalTokens;
+      // const result = streamText({
+      //   // model: openai("gpt-4o-mini"),
+      //   // model: openrouter.chat("meta-llama/llama-3.3-8b-instruct:free"),
+      //   model: openrouter.chat("google/gemma-3n-e4b-it:free"),
+      //   messages,
+      //   //         system: `You are an expert assistant. Format your response like ChatGPT with:
+      //   // - Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
+      //   // - Bullet points for lists
+      //   // - Code blocks for any code
+      //   // - Bold or italicized keywords
+      //   // - Clear and concise explanations
+      //   // - Highlight results or final answers at the end
+      //   // Always format in **markdown**. Avoid unnecessary repetition. Focus on clarity and readability.
+      //   // `,
 
-//           if (chatId) {
-//             // Continue if under limit
-//             const data = appendResponseMessages({
-//               messages,
-//               responseMessages: response.messages,
-//             });
+      //   async onFinish({ response, usage }) {
+      //     const totalTokensUsedNow = usage.totalTokens;
 
-//             await db.collection("chats").updateOne(
-//               { _id: new ObjectId(chatId), userId },
-//               {
-//                 $set: {
-//                   messages: data,
-//                   updatedAt: new Date(),
-//                   fileUrl,
-//                 },
-//                 $inc: {
-//                   tokenUsed: totalTokensUsedNow,
-//                 },
-//               }
-//             );
-//           }
-//         },
-//         maxTokens: 100,
-//       });
+      //     if (chatId) {
+      //       // Continue if under limit
+      //       const data = appendResponseMessages({
+      //         messages,
+      //         responseMessages: response.messages,
+      //       });
 
-//       // Save chat to database
+      //       await db.collection("chats").updateOne(
+      //         { _id: new ObjectId(chatId), userId },
+      //         {
+      //           $set: {
+      //             messages: data,
+      //             updatedAt: new Date(),
+      //             fileUrl,
+      //           },
+      //           $inc: {
+      //             tokenUsed: totalTokensUsedNow,
+      //           },
+      //         }
+      //       );
+      //     }
+      //   },
+      //   maxTokens: 100,
+      // });
 
-//       return result.toDataStreamResponse();
-//     }
+      // Save chat to database
 
-
+      // return result.toDataStreamResponse();
+    }
   } catch (error) {
     console.error("Chat API error:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return new Response(errorMessage, { status: 500 });
   }
 }

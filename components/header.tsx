@@ -61,10 +61,10 @@ export default function Header() {
 
         {/* User Button */}
         <div className="md:flex items-center justify-center">
-          <button className="bg-transparent rounded-full p-1  flex items-center justify-center">
+          <div className="bg-transparent rounded-full p-1  flex items-center justify-center">
             <ThemeToggle />
             <UserButton />
-          </button>
+          </div>
         </div>
       </div>
     </header>

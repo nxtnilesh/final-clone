@@ -48,11 +48,6 @@ export async function GET() {
       .sort({ updatedAt: -1 })
       .toArray();
 
-      // console.log("without id",chats);
-      
-    // return Response.json({chats,"fileUrl":chats.fileUrl});
-
-
     return Response.json(chats);
   } catch (error) {
     console.error("Get chats error:", error);

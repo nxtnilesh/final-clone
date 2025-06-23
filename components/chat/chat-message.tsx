@@ -3,17 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { UIMessage } from "ai";
-import {
-  Check,
-  Copy,
-  Edit,
-  ThumbsDown,
-  ThumbsUp
-} from "lucide-react";
+import { Check, Copy, Edit, ThumbsDown, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { irBlack } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { docco, irBlack } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
 
 interface ChatMessageProps {
@@ -105,25 +100,49 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
                   components={{
                     code({ inline, className, children, ...rest }: any) {
                       const match = /language-(\w+)/.exec(className || "");
-                      return !inline && match ? (
-                        <div className="w-[200px] sm:w-full overflow-x-auto rounded-md my-2">
-                          <SyntaxHighlighter
-                            style={irBlack}
-                            language={match[1]}
-                            PreTag="div"
-                            customStyle={{
-                              borderRadius: "0.5rem",
-                              fontSize: "0.875rem",
-                              width: "100%", // Makes it fully responsive
-                              maxWidth: "100%", // Prevents overflow
-                              overflowX: "auto", // Enables horizontal scrolling if needed
-                            }}
-                            {...rest}
-                          >
-                            {String(children).replace(/\n$/, "")}
-                          </SyntaxHighlighter>
-                        </div>
-                      ) : (
+                      const codeToCopy = String(children).replace(/\n$/, "");
+
+                      if (!inline && match) {
+                        return (
+                          <div className=" w-[300px] sm:w-full overflow-x-auto relative group my-2 max-w-full">
+                            {/* Copy Button */}
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(codeToCopy);
+                                toast({
+                                  title: "Copied code to clipboard",
+                                  duration: 2000,
+                                });
+                              }}
+                              className="absolute mt-1 top-2 right-2 z-10 p-1 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
+                            >
+                              <Copy className="w-4 h-4" />
+                            </button>
+
+                            {/* Syntax Highlighter */}
+                            <div className=" rounded-md my-2">
+                              <SyntaxHighlighter
+                                style={vscDarkPlus}
+                                language={match[1]}
+                                PreTag="div"
+                                customStyle={{
+                                  borderRadius: "0.5rem",
+                                  fontSize: "0.875rem",
+                                  width: "100%", // Makes it fully responsive
+                                  maxWidth: "100%", // Prevents overflow
+                                  overflowX: "auto", // Enables horizontal scrolling if needed
+                                }}
+                                {...rest}
+                              >
+                                {String(children).replace(/\n$/, "")}
+                              </SyntaxHighlighter>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // Inline code fallback
+                      return (
                         <code
                           className="bg-muted dark:bg-neutral-700 px-1.5 py-0.5 rounded text-sm font-mono break-words"
                           {...rest}

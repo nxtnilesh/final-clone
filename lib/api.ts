@@ -1,7 +1,5 @@
 import axios from "axios";
-import type { CoreMessage } from "ai";
 import type { Chat } from "./store";
-import { UIMessage } from "ai";
 
 const api = axios.create({
   baseURL: "https://final-clone-sigma.vercel.app/api",
@@ -9,13 +7,11 @@ const api = axios.create({
   timeout: 30000,
 });
 
-// Request interceptor for error handling
 api.interceptors.request.use(
   (config) => config,
   (error) => Promise.reject(error)
 );
 
-// Response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -25,11 +21,8 @@ api.interceptors.response.use(
 );
 
 export const chatApi = {
-  // Get all chats
   getChats: async (): Promise<Chat[]> => {
     const response = await api.get("/chats");
-    console.log("res", response);
-
     return response.data;
   },
 
@@ -42,6 +35,8 @@ export const chatApi = {
   // Create new chat
   createChat: async (title?: string, messages?: any): Promise<Chat> => {
     const response = await api.post("/chats", { title, messages });
+    console.log("create chat", response);
+    
     return response.data;
   },
 

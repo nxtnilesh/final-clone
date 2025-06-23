@@ -53,7 +53,7 @@ export function ChatActionsDropdown({
           Rename
         </DropdownMenuItem>
 
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={() => {
             onShare();
             isMobileControll()
@@ -61,7 +61,7 @@ export function ChatActionsDropdown({
         >
           <Share2 className="w-4 h-4 mr-2" />
           Share
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         <div className="mt-1">
           <DeleteChatDialog
