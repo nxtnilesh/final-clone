@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Ellipsis, Edit2, Share2 } from "lucide-react";
 import { DeleteChatDialog } from "../deletec-chat-dialog";
 import { useState } from "react";
+import { useSidebar } from "../ui/sidebar";
 
 export function ChatActionsDropdown({
   onRename,
@@ -21,6 +22,7 @@ export function ChatActionsDropdown({
   chatName: string;
 }) {
   const [open, setOpen] = useState(false);
+  // const {open} = useSidebar()
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -57,6 +59,7 @@ export function ChatActionsDropdown({
         <div className="mt-1">
           <DeleteChatDialog
             onDelete={() => {
+              
               onDelete();
               setOpen(false);
             }}

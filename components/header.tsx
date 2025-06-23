@@ -37,7 +37,7 @@ export default function Header() {
         </Badge>
       </div>
 
-      <ThemeToggle />
+      
 
       {/* Right side actions */}
       <div className="flex items-center justify-center gap-2">
@@ -61,7 +61,8 @@ export default function Header() {
 
         {/* User Button */}
         <div className="md:flex items-center justify-center">
-          <button className="bg-transparent rounded-full p-1 hover:bg-gray-200 dark:hover:bg-neutral-600 flex items-center justify-center">
+          <button className="bg-transparent rounded-full p-1  flex items-center justify-center">
+            <ThemeToggle />
             <UserButton />
           </button>
         </div>

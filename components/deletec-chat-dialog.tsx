@@ -36,13 +36,13 @@ export function DeleteChatDialog({ chatName, onDelete }: DeleteChatDialogProps) 
             This will delete <span className="font-bold">{chatName}</span>.
           </p>
           <p>
-            Visit{" "}
+            Visit
             <a
               href="/settings"
               className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-500"
             >
               settings
-            </a>{" "}
+            </a>
             to delete any memories saved during this chat.
           </p>
         </DialogDescription>

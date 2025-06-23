@@ -519,13 +519,13 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     );
 
   return (
-    <div className="min-h-screen bg-white text-black dark:bg-neutral-800 dark:text-white">
+    <div className="min-h-screen  bg-white text-black dark:bg-neutral-800 w-full dark:text-white">
       <div className="sticky top-0 z-50 w-full">
         <Header />
       </div>
 
-      <div className="max-w-3xl mx-auto">
-        <ScrollArea className=" h-[calc(80vh-2rem)] p-4">
+      <div className="w-full ">
+        <ScrollArea className="mx-auto max-w-3xl h-[calc(80vh-2rem)]  p-4 overflow-x-hidden">
           <div className="mx-auto">
             {messages.map((message) => (
               <ChatMessage

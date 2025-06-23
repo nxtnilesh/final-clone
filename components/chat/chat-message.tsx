@@ -1,24 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Copy,
-  Check,
-  Edit,
-  X,
-  User,
-  Bot,
-  ThumbsUp,
-  ThumbsDown,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
+import { UIMessage } from "ai";
+import {
+  Check,
+  Copy,
+  Edit,
+  ThumbsDown,
+  ThumbsUp
+} from "lucide-react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { irBlack } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import remarkGfm from "remark-gfm";
-import { UIMessage } from "ai";
 
 interface ChatMessageProps {
   message: UIMessage;
@@ -60,7 +56,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
 
   return (
     <div
-      className={`flex  items-start gap-3 mb-6 px-4 max-w-3xl ${
+      className={`flex items-start gap-3 mb-6 px-4  ${
         isUser ? "flex-row-reverse" : ""
       }`}
     >
@@ -92,9 +88,13 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
               </div>
             </div>
           ) : (
-            <div className={`max-w-3xl flex ${isUser ? "justify-end" : "justify-start"}`}>
+            <div
+              className={`max-w-3xl flex ${
+                isUser ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-                className={`${
+                className={` ${
                   isUser
                     ? "justify-end bg-gray-200 dark:bg-neutral-600 px-3 pt-2 rounded-2xl"
                     : "justify-start"
@@ -106,19 +106,23 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
                     code({ inline, className, children, ...rest }: any) {
                       const match = /language-(\w+)/.exec(className || "");
                       return !inline && match ? (
-                        <SyntaxHighlighter
-                          style={oneDark}
-                          language={match[1]}
-                          PreTag="div"
-                          customStyle={{
-                            padding: "1rem",
-                            borderRadius: "0.5rem",
-                            fontSize: "0.875rem",
-                          }}
-                          {...rest}
-                        >
-                          {String(children).replace(/\n$/, "")}
-                        </SyntaxHighlighter>
+                        <div className="w-[200px] sm:w-full overflow-x-auto rounded-md my-2">
+                          <SyntaxHighlighter
+                            style={irBlack}
+                            language={match[1]}
+                            PreTag="div"
+                            customStyle={{
+                              borderRadius: "0.5rem",
+                              fontSize: "0.875rem",
+                              width: "100%", // Makes it fully responsive
+                              maxWidth: "100%", // Prevents overflow
+                              overflowX: "auto", // Enables horizontal scrolling if needed
+                            }}
+                            {...rest}
+                          >
+                            {String(children).replace(/\n$/, "")}
+                          </SyntaxHighlighter>
+                        </div>
                       ) : (
                         <code
                           className="bg-muted dark:bg-neutral-700 px-1.5 py-0.5 rounded text-sm font-mono break-words"
@@ -175,7 +179,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
                     ),
                     blockquote: (props) => (
                       <blockquote
-                        className="border-l-4 pl-4 italic text-muted-foreground dark:text-neutral-400 my-4"
+                        className="border-l-4  italic text-muted-foreground dark:text-neutral-400 my-4"
                         {...props}
                       />
                     ),
@@ -246,11 +250,23 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
                   : "opacity-100 justify-start"
               }`}
             >
-              <Button size="sm" variant="ghost" onClick={() => handleCopy(message.content)}>
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => handleCopy(message.content)}
+              >
+                {copied ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
               </Button>
               {isUser && (
-                <Button size="sm" variant="ghost" onClick={() => setIsEditing(true)}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setIsEditing(true)}
+                >
                   <Edit className="w-4 h-4" />
                 </Button>
               )}

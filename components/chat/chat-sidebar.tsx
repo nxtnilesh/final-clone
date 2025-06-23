@@ -76,9 +76,10 @@ export function ChatSidebar() {
   };
 
   const handleDelete = async (chatId: string, chatTitle: string) => {
-    await deleteChat(chatId);
+    const wait = await deleteChat(chatId);
+    
     if (currentChat?._id === chatId) {
-      router.push("/chat");
+      // router.push("/chat");
     }
   };
 
