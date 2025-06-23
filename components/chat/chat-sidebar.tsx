@@ -15,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useChats } from "@/hooks/use-chats";
@@ -29,7 +30,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { set } from "zod";
 
 export function ChatSidebar() {
-  const isMobile = useIsMobile();
+ const { isMobile, open ,toggleSidebar} = useSidebar();
   const router = useRouter();
   const { chats, isLoadingChats, createChat, deleteChat, updateChatTitle } =
     useChats();
@@ -39,7 +40,7 @@ export function ChatSidebar() {
 
   const closeSidebarOnMobile = () => {
     if (isMobile) {
-      setSidebarOpen(!setSidebarOpen);
+      toggleSidebar();
     }
   };
   const handleNewChat = async () => {
@@ -52,8 +53,8 @@ export function ChatSidebar() {
   };
 
   const handleChatClick = (chatId: string) => {
-    setSidebarOpen(false);
     router.push(`/chat/${chatId}`);
+    closeSidebarOnMobile();
   };
 
   const handleEditStart = (chatId: string, currentTitle: string) => {
@@ -82,7 +83,6 @@ export function ChatSidebar() {
   };
 
   const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
-  const { sidebarOpen, setSidebarOpen } = useChatStore();
   return (
     <Sidebar>
       <SidebarHeader className="p-4">

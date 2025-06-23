@@ -26,7 +26,7 @@ export function ChatActionsDropdown({
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="w-6 h-6 p-0">
-          <Ellipsis className="w-4 h-4 opacity-0 group-hover/chat-btn:opacity-100 transition-opacity duration-200 dark:text-white" />
+          <Ellipsis className="w-4 h-4 sm:opacity-0 sm:group-hover/chat-btn:opacity-100 transition-opacity duration-200 dark:text-white " />
         </Button>
       </DropdownMenuTrigger>
 

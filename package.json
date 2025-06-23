@@ -13,6 +13,7 @@
     "@aws-sdk/credential-providers": "latest",
     "@clerk/nextjs": "^6.22.0",
     "@hookform/resolvers": "^3.9.1",
+    "@mem0/vercel-ai-provider": "^1.0.6",
     "@mongodb-js/zstd": "latest",
     "@openrouter/ai-sdk-provider": "^0.7.2",
     "@radix-ui/react-accordion": "1.2.2",

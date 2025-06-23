@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
     if (!userId) {
-      console.log("userID");
+      // console.log("userID");
       
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
         userId,
         title: title || "New Chat",
         messages: messages,
+        tokenUsed:0,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -47,7 +48,7 @@ export async function GET() {
       .sort({ updatedAt: -1 })
       .toArray();
 
-      console.log("without id",chats);
+      // console.log("without id",chats);
       
     // return Response.json({chats,"fileUrl":chats.fileUrl});
 

@@ -24,7 +24,7 @@ export async function GET(
     if (!chat) {
       return Response.json({ error: "Chat not found" }, { status: 404 });
     }
-    console.log("chats", chat);
+    // console.log("chats", chat);
 
     // return Response.json({chat,"fileUrl":chat.fileUrl});
     return Response.json(chat);

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ChevronDown, Sparkles, Share, MoreHorizontal } from "lucide-react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { UserButton } from "@clerk/nextjs";
 import { useChatStore } from "@/lib/store";
 import { Badge } from "./ui/badge";
@@ -11,13 +11,14 @@ import { useRouter } from "next/navigation";
 import { ThemeToggle } from "./theme-toggle";
 
 export default function Header() {
-  const { sidebarOpen } = useChatStore();
+  const { isMobile, open } = useSidebar();
   const router = useRouter();
 
   return (
     <header className="bg-white dark:bg-neutral-800 flex h-14 w-full items-center justify-between gap-4 border-b border-gray-200 dark:border-neutral-600 px-4 md:px-6">
       <div className="text-black dark:text-white">
-        <SidebarTrigger size="icon" />
+        {isMobile && <SidebarTrigger size="icon" />}
+        {!isMobile && !open && <SidebarTrigger size="icon" />}
       </div>
 
       {/* ChatGPT Title - hidden on small screens */}
