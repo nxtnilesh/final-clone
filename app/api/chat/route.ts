@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { openai } from "@ai-sdk/openai";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import {
   appendResponseMessages,
   generateText,
@@ -131,10 +132,13 @@ export async function POST(req: NextRequest) {
       // console.log("message", lastMessage);
       console.log("message", messages);
 
+      const google = createGoogleGenerativeAI({
+        // custom settings
+      });
       const result = streamText({
         // model: openai("gpt-4o-mini"),
         // model: openrouter.chat("meta-llama/llama-3.3-8b-instruct:free"),
-        model: openrouter.chat("google/gemma-3n-e4b-it:free"),
+        model: google.chat("gemini-2.0-flash-lite"),
         messages,
         //         system: `You are an expert assistant. Format your response like ChatGPT with:
         // - Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
