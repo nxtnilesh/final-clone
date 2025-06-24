@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     console.log("messages", JSON.stringify(messages));
 
     if (tool.tool === "AI") {
-    // if ("AI" === "AI") {
+      // if ("AI" === "AI") {
       console.log("ai tools ");
 
       const mem0 = createMem0({
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
       console.log("image tool");
       console.log(messages);
       errorMessage = "Image exceeds the supported token limit.";
-      
+
       // throw new Error(errorMessage);
       const lastMessage = messages[messages.length - 1];
       if (fileUrl && messages?.length > 0) {
@@ -120,9 +120,6 @@ export async function POST(req: NextRequest) {
               messages[messages.length - 1].parts?.[0]?.text ||
               messages[messages.length - 1].content ||
               "",
-            providerOptions: {
-              openai: { imageDetail: "low" },
-            },
           },
           {
             type: "image",

@@ -90,15 +90,16 @@ export function ChatSidebar() {
     <Sidebar>
       <SidebarHeader className="p-4">
         <div className="flex justify-between">
-          <Image
-            src={"./logo.png"}
+          {/* <Image
+            src={"./public/logo.png"}
             alt="logo"
             width={30}
             height={20}
             onClick={handleNewChat}
             className="cursor-pointer"
-          ></Image>
-          
+          ></Image> */}
+          <FaRobot size={30} onClick={handleNewChat}
+            className="cursor-pointer" />
           <SidebarTrigger size="icon" />
         </div>
       </SidebarHeader>
