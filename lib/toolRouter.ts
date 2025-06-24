@@ -12,7 +12,7 @@ export async function classifyToolAndMemory(user_input: string): Promise<{
   const prompt = `
 You are a tool router and memory detector.
 Decide the tool to use:
-- Image → if the input is about uploading, generating, editing, or describing an image.
+- Image → if the input is about uploading, generating, editing, or describing an image url include images.
 - PDF → if the input is about uploading or working with a document (PDF, DOCX, TXT).
 - AI → for all other tasks (text, code, Q&A, etc.) or if unclear.
 Also, check if the input contains personal preferences, facts, goals, or instructions worth remembering.

@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
         apiKey: process.env.NEXT_GOOGLE_API_KEY,
       });
       const result = streamText({
-        model: mem0("gemini-2.5-flash", {
+        model: mem0("gemini-2.0-flash-lite", {
           user_id: userId,
         }),
         messages,
@@ -138,7 +138,8 @@ export async function POST(req: NextRequest) {
       const result = streamText({
         // model: openai("gpt-4o-mini"),
         // model: openrouter.chat("meta-llama/llama-3.3-8b-instruct:free"),
-        model: google.chat("gemini-2.0-flash-lite"),
+        model: google.chat("gemini-2.5-flash"),
+        // model: google.chat("gemini-2.0-flash-lite"),
         messages,
         //         system: `You are an expert assistant. Format your response like ChatGPT with:
         // - Headings starting with emojis (e.g., 🧠 Overview, ✅ Solution)
@@ -175,7 +176,6 @@ export async function POST(req: NextRequest) {
             );
           }
         },
-        maxTokens: 100,
       });
 
       // Save chat to database
