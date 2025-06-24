@@ -10,7 +10,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => config,
   (error) => {
-    alert("Request Error: " + error.message);
+    // alert("Request Error: " + error.message);
     return Promise.reject(error);
   }
 );
@@ -19,12 +19,12 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error("API Error:", error);
-    alert(
-      "No stable internet" +
-        (error.response?.data?.message ||
-          error.message ||
-          "Something went wrong")
-    );
+    // alert(
+    //   "No stable internet" +
+    //     (error.response?.data?.message ||
+    //       error.message ||
+    //       "Something went wrong")
+    // );
 
     return Promise.reject(error);
   }

@@ -218,21 +218,28 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                   const index = messages.findIndex((msg) => msg.id === id);
                   if (index === -1) return;
 
-                  // Update the message at the found index
+                  const oldMessage = messages[index];
+
                   const updatedMessage = {
-                    ...messages[index],
+                    ...oldMessage,
                     content: newContent,
+                    parts: [
+                      {
+                        ...oldMessage.parts?.[0],
+                        text: newContent,
+                      },
+                    ],
                   };
 
-                  // Keep all messages *before and including* the updated one
                   const updatedMessages = [
                     ...messages.slice(0, index),
                     updatedMessage,
+                    ...messages.slice(index + 1), // don't forget the rest!
                   ];
 
                   setMessages(updatedMessages);
                   reload();
-                  console.log("Updated messages:", updatedMessages, messages);
+                  console.log("Updated messages:", updatedMessages);
                 }}
               />
             ))}

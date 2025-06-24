@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
         apiKey: process.env.NEXT_GOOGLE_API_KEY,
       });
       const result = streamText({
-        model: mem0("gemini-2.0-flash-lite", {
+        model: mem0("gemini-2.5-flash", {
           user_id: userId,
         }),
         messages,
@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
       console.log("message", messages);
 
       const google = createGoogleGenerativeAI({
-        // custom settings
+        apiKey: process.env.NEXT_GOOGLE_API_KEY,
       });
       const result = streamText({
         // model: openai("gpt-4o-mini"),
