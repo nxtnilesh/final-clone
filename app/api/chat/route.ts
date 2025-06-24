@@ -16,9 +16,9 @@ import { createMem0 } from "@mem0/vercel-ai-provider";
 
 export const maxDuration = 30;
 
-const openrouter = createOpenRouter({
-  apiKey: process.env.NEXT_OPENROUTER_API_KEY,
-});
+// const openrouter = createOpenRouter({
+//   apiKey: process.env.NEXT_OPENROUTER_API_KEY,
+// });
 
 export async function POST(req: NextRequest) {
   let errorMessage = "";
