@@ -9,13 +9,23 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => config,
-  (error) => Promise.reject(error)
+  (error) => {
+    alert("Request Error: " + error.message);
+    return Promise.reject(error);
+  }
 );
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error("API Error:", error);
+    alert(
+      "No stable internet" +
+        (error.response?.data?.message ||
+          error.message ||
+          "Something went wrong")
+    );
+
     return Promise.reject(error);
   }
 );
@@ -36,7 +46,7 @@ export const chatApi = {
   createChat: async (title?: string, messages?: any): Promise<Chat> => {
     const response = await api.post("/chats", { title, messages });
     console.log("create chat", response);
-    
+
     return response.data;
   },
 
@@ -50,7 +60,7 @@ export const chatApi = {
       `/search-chats?title=${chatTitle}&page=1&limit=10`
     );
     console.log("search", response);
-    
+
     return response.data;
   },
 

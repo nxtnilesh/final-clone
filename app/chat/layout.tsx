@@ -1,9 +1,6 @@
 "use client"
-import { SidebarProvider } from "@/components/ui/sidebar"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
-import { SidebarInset } from "@/components/ui/sidebar"
-import { useChatStore } from "@/lib/store"
-import { useEffect } from "react"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 
 export default function ChatLayout({

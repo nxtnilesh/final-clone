@@ -39,7 +39,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
     }
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = () => {    
     onEdit?.(message.id, editContent);
     setIsEditing(false);
   };
@@ -70,7 +70,7 @@ export function ChatMessage({ message, onEdit }: ChatMessageProps) {
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full min-h-[100px] bg-white dark:bg-neutral-800 text-black dark:text-white placeholder:text-muted-foreground dark:placeholder:text-neutral-400 border border-gray-300 dark:border-neutral-600 outline-none focus:ring-0 shadow-sm resize-none"
+                className="rounded-3xl w-full min-h-[100px] bg-white dark:bg-neutral-800 p-3 text-black dark:text-white placeholder:text-muted-foreground dark:placeholder:text-neutral-400 border border-gray-300 dark:border-neutral-600 outline-none focus:ring-0 shadow-sm resize-none"
                 autoFocus
               />
               <div className="flex gap-2 mt-2">

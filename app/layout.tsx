@@ -22,6 +22,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
+          <link rel="icon" href="/logo.png" sizes="any" />
+        <head>
+        </head>
         <body className={inter.className}>
           <ThemeProvider
             attribute="class"

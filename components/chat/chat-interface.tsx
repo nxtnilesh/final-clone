@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
-import { ArrowUp, Pause, Mic, Loader2 } from "lucide-react";
+import { ArrowUp, Pause, Mic, Loader2, CirclePause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCurrentChat } from "@/hooks/use-current-chat";
@@ -18,6 +18,7 @@ import useSpeechRecognition from "@/hooks/use-speechRecogination";
 import Header from "../header";
 import Image from "next/image";
 import ExtraMobile from "../extraMobile";
+import { FaStopCircle } from "react-icons/fa";
 
 interface ChatInterfaceProps {
   chatId?: string;
@@ -46,6 +47,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     isLoading,
     status,
     append,
+    reload,
+    stop,
   } = useChat({
     api: "/api/chat",
     body: { chatId, fileUrl },
@@ -101,7 +104,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         onSubmit={handleSubmit}
         className="mx-3 flex flex-col rounded-3xl border border-neutral-200 dark:border-neutral-700 shadow-lg p-1 bg-neutral-100 dark:bg-neutral-800"
       >
-        {fileUrl && (
+        {fileUrl && messages.length === 0 ? (
           <Image
             src={fileUrl}
             height={250}
@@ -109,7 +112,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             alt="Uploaded Preview"
             className="max-w-xs mt-2 rounded-lg border"
           />
-        )}
+        ) : null}
         <textarea
           value={input}
           onChange={handleInputChange}
@@ -158,11 +161,16 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               <Mic className="h-9 w-9 p-2 rounded-full mx-2 text-black dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-700" />
             )}
           </button>
-          <button type="submit" disabled={isLoading || !input.trim()}>
+          <button type="submit">
             {status === "ready" ? (
               <ArrowUp className="h-9 w-9 p-1 rounded-full mx-2 text-black dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-700" />
             ) : (
-              <Loader2 className="w-6 h-6 animate-spin" />
+              <FaStopCircle
+                onClick={() => {
+                  stop(), alert("testing");
+                }}
+                className="w-6 h-6 text-white font-extrabold animate-pulse cursor-pointer"
+              />
             )}
           </button>
         </div>
@@ -207,10 +215,24 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 key={message.id}
                 message={message}
                 onEdit={(id, newContent) => {
-                  const updatedMessages = messages.map((msg) =>
-                    msg.id === id ? { ...msg, content: newContent } : msg
-                  );
+                  const index = messages.findIndex((msg) => msg.id === id);
+                  if (index === -1) return;
+
+                  // Update the message at the found index
+                  const updatedMessage = {
+                    ...messages[index],
+                    content: newContent,
+                  };
+
+                  // Keep all messages *before and including* the updated one
+                  const updatedMessages = [
+                    ...messages.slice(0, index),
+                    updatedMessage,
+                  ];
+
                   setMessages(updatedMessages);
+                  reload();
+                  console.log("Updated messages:", updatedMessages, messages);
                 }}
               />
             ))}

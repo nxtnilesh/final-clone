@@ -1,4 +1,5 @@
 "use client";
+import Logo from "@/public/logo.png";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,9 +29,10 @@ import { ChatActionsDropdown } from "./chat-dropdown";
 import { ChatSearchDialog } from "./chat-search-dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { set } from "zod";
+import Image from "next/image";
 
 export function ChatSidebar() {
- const { isMobile, open ,toggleSidebar,setOpen} = useSidebar();
+  const { isMobile, open, toggleSidebar, setOpen } = useSidebar();
   const router = useRouter();
   const { chats, isLoadingChats, createChat, deleteChat, updateChatTitle } =
     useChats();
@@ -77,7 +79,7 @@ export function ChatSidebar() {
 
   const handleDelete = async (chatId: string, chatTitle: string) => {
     const wait = await deleteChat(chatId);
-    
+
     if (currentChat?._id === chatId) {
       router.push("/chat");
     }
@@ -88,11 +90,15 @@ export function ChatSidebar() {
     <Sidebar>
       <SidebarHeader className="p-4">
         <div className="flex justify-between">
-          <FaRobot
-            size={25}
+          <Image
+            src={"./logo.png"}
+            alt="logo"
+            width={30}
+            height={20}
             onClick={handleNewChat}
-            className="text-black dark:text-white"
-          />
+            className="cursor-pointer"
+          ></Image>
+          
           <SidebarTrigger size="icon" />
         </div>
       </SidebarHeader>
