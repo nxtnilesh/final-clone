@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { text } = await generateText({
-      model: openrouter.chat("mistralai/devstral-small:free"),
+      model: openrouter.chat("google/gemma-3n-e2b-it:free"),
       prompt: `Generate a short, descriptive title (max 6 words) for a conversation that starts with: "${messages[0].content}". Only return the text title, nothing else.`,
     });
 

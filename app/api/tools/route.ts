@@ -11,7 +11,7 @@ export async function GET() {
 
   try {
     const result = await generateText({
-      model: openrouter.chat("mistralai/devstral-small:free"),
+      model: openrouter.chat("google/gemma-3n-e2b-it:free"),
       prompt: `
 You are a tool router and memory detector.
 Decide the tool to use:

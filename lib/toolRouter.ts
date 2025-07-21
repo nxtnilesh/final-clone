@@ -23,7 +23,7 @@ Default to tool: "AI" and addMemory: false if unclear.
 `.trim();
 
   const result = await generateText({
-    model: openrouter.chat("mistralai/devstral-small:free"),
+    model: openrouter.chat("google/gemma-3n-e2b-it:free"),
     prompt,
   });
 
