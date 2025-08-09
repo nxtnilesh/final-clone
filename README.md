@@ -168,7 +168,7 @@ Open [http://localhost:3000](http://localhost:3000)
 ## 🧠 Memory with Mem0
 
 - Adds persistent context per user/chat
-- Stored using Mem0’s API (you must create a project there)
+- Stored using Mem0’s API
 
 ---
 
